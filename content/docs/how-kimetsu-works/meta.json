@@ -1,0 +1,13 @@
+{
+  "title": "How Kimetsu Works",
+  "pages": [
+    "index",
+    "the-brain",
+    "the-broker",
+    "learning-loop",
+    "interfaces",
+    "retrieval-models",
+    "operations",
+    "configuration"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Memory Benchmark",
+  "pages": [
+    "index",
+    "retrieval-and-correctness",
+    "brainbench",
+    "longmemeval",
+    "beam",
+    "comparison"
+  ]
+}

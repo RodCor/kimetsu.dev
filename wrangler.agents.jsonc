@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "kimetsu-agent-gateway",
+  "main": "./worker/index.mjs",
+  "compatibility_date": "2026-08-22",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "agents.kimetsu.dev",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
+  }
+}

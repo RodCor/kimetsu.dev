@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kimetsu.dev/schemas/agent-directory-v1.schema.json",
+  "title": "kimetsu.dev agent directory",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "name",
+    "gateway",
+    "authentication",
+    "constraints",
+    "endpoints",
+    "projects"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "gateway": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "documentation": { "type": "string", "format": "uri" },
+    "authentication": {
+      "type": "object",
+      "required": ["required", "warning"],
+      "properties": {
+        "required": { "const": false },
+        "warning": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "object",
+      "required": [
+        "read_only",
+        "methods",
+        "caller_supplied_urls",
+        "writes",
+        "tool_execution"
+      ],
+      "properties": {
+        "read_only": { "const": true },
+        "methods": {
+          "type": "array",
+          "items": { "enum": ["GET", "HEAD", "OPTIONS"] }
+        },
+        "query_strings": { "const": false },
+        "caller_supplied_urls": { "const": false },
+        "writes": { "const": false },
+        "tool_execution": { "const": false }
+      },
+      "additionalProperties": false
+    },
+    "endpoints": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https://agents\\.kimetsu\\.dev/"
+      }
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "url", "repository", "agent_entry"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "name": { "type": "string", "minLength": 1 },
+          "url": { "type": "string", "format": "uri" },
+          "repository": { "type": "string", "format": "uri" },
+          "agent_entry": { "type": "string", "format": "uri" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": true
+}
