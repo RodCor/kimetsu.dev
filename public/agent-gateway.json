@@ -25,6 +25,9 @@
     "tool_execution": false
   },
   "endpoints": {
+    "llms_txt": "https://agents.kimetsu.dev/llms.txt",
+    "openapi": "https://agents.kimetsu.dev/openapi.json",
+    "robots_txt": "https://agents.kimetsu.dev/robots.txt",
     "projects": "https://agents.kimetsu.dev/v1/projects",
     "sidequest_gateway": "https://agents.kimetsu.dev/v1/sidequest",
     "sidequest_proposals": "https://agents.kimetsu.dev/v1/sidequest/proposals",

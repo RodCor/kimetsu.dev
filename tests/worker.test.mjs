@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
+  LLMS_TEXT,
+  OPENAPI_DOCUMENT,
+  ROBOTS_TEXT,
+} from "../worker/discovery-documents.mjs";
+import {
   a2aAgentCardV1,
   directory,
   handleGatewayFetch,
@@ -22,6 +27,80 @@ test("publishes a credential-free, read-only directory", async () => {
   assert.equal(body.constraints.read_only, true);
   assert.equal(body.constraints.writes, false);
 });
+
+test("publishes honest agent-discovery documents", async () => {
+  const llms = await gateway("/llms.txt");
+  assert.equal(llms.status, 200);
+  assert.match(llms.headers.get("content-type"), /^text\/plain/);
+  assert.equal(
+    llms.headers.get("cache-control"),
+    "public, max-age=300, s-maxage=3600",
+  );
+  assert.equal(await llms.text(), LLMS_TEXT);
+  assert.match(LLMS_TEXT, /^# Sidequest Commons Guide/m);
+  assert.match(LLMS_TEXT, /\.well-known\/agent-card\.json/);
+  assert.match(LLMS_TEXT, /Never send credentials/);
+
+  const robots = await gateway("/robots.txt");
+  assert.equal(robots.status, 200);
+  assert.equal(await robots.text(), ROBOTS_TEXT);
+  for (const crawler of [
+    "GPTBot",
+    "OAI-SearchBot",
+    "ClaudeBot",
+    "PerplexityBot",
+    "Google-Extended",
+  ]) {
+    assert.match(ROBOTS_TEXT, new RegExp(`User-agent: ${crawler}\\nAllow: /`));
+  }
+
+  const openapi = await gateway("/openapi.json");
+  assert.equal(openapi.status, 200);
+  assert.match(openapi.headers.get("content-type"), /^application\/json/);
+  assert.deepEqual(await openapi.json(), OPENAPI_DOCUMENT);
+  assert.equal(OPENAPI_DOCUMENT.openapi, "3.1.0");
+  assert.deepEqual(OPENAPI_DOCUMENT.security, []);
+  assert.equal(OPENAPI_DOCUMENT.servers[0].url, "https://agents.kimetsu.dev");
+  assert.ok(OPENAPI_DOCUMENT.paths["/.well-known/agent-card.json"]);
+  assert.ok(OPENAPI_DOCUMENT.paths["/a2a/sidequest"].post);
+  assert.equal(OPENAPI_DOCUMENT.components.securitySchemes, undefined);
+});
+
+for (const path of ["/llms.txt", "/robots.txt", "/openapi.json"]) {
+  test(`protects the discovery route ${path}`, async () => {
+    const head = await gateway(path, { method: "HEAD" });
+    assert.equal(head.status, 200);
+    assert.equal(await head.text(), "");
+    assert.equal(head.headers.get("access-control-allow-origin"), "*");
+
+    const preflight = await gateway(path, { method: "OPTIONS" });
+    assert.equal(preflight.status, 204);
+    assert.equal(
+      preflight.headers.get("access-control-allow-methods"),
+      "GET, HEAD, OPTIONS",
+    );
+    assert.equal(
+      preflight.headers.get("access-control-allow-headers"),
+      "Accept",
+    );
+
+    const write = await gateway(path, {
+      method: "POST",
+      body: "untrusted",
+    });
+    assert.equal(write.status, 405);
+
+    const query = await gateway(`${path}?url=https://example.com`);
+    assert.equal(query.status, 400);
+    assert.equal((await query.json()).error, "query_rejected");
+
+    const credential = await gateway(path, {
+      headers: { authorization: "Bearer rejected-marker" },
+    });
+    assert.equal(credential.status, 400);
+    assert.equal((await credential.json()).error, "credentials_rejected");
+  });
+}
 
 for (const header of [
   "authorization",
@@ -319,6 +398,10 @@ test("telemetry classifies known clients without retaining user-agent text", () 
   ]);
   assert.deepEqual(classifyGatewayRoute("/.well-known/agent.json"), [
     "/.well-known/agent.json",
+    "discovery",
+  ]);
+  assert.deepEqual(classifyGatewayRoute("/openapi.json"), [
+    "/openapi.json",
     "discovery",
   ]);
 });

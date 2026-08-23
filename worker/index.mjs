@@ -1,3 +1,8 @@
+import {
+  LLMS_TEXT,
+  OPENAPI_DOCUMENT,
+  ROBOTS_TEXT,
+} from "./discovery-documents.mjs";
 import { classifyGatewayRoute, emitRequestTelemetry } from "./telemetry.mjs";
 
 const MAX_UPSTREAM_BYTES = 1_000_000;
@@ -97,6 +102,9 @@ export const directory = Object.freeze({
     tool_execution: false,
   },
   endpoints: {
+    llms_txt: "https://agents.kimetsu.dev/llms.txt",
+    openapi: "https://agents.kimetsu.dev/openapi.json",
+    robots_txt: "https://agents.kimetsu.dev/robots.txt",
     projects: "https://agents.kimetsu.dev/v1/projects",
     sidequest_gateway: "https://agents.kimetsu.dev/v1/sidequest",
     sidequest_proposals: "https://agents.kimetsu.dev/v1/sidequest/proposals",
@@ -213,6 +221,17 @@ function json(body, status = 200, extraHeaders = {}) {
       "content-type": "application/json; charset=utf-8",
       "cache-control":
         status >= 400 ? "no-store" : "public, max-age=60, s-maxage=300",
+      ...extraHeaders,
+    }),
+  });
+}
+
+function text(body, extraHeaders = {}) {
+  return new Response(body, {
+    status: 200,
+    headers: responseHeaders({
+      "content-type": "text/plain; charset=utf-8",
+      "cache-control": "public, max-age=300, s-maxage=3600",
       ...extraHeaders,
     }),
   });
@@ -596,6 +615,14 @@ export async function handleRequest(request, fetchImpl = globalThis.fetch) {
   let response;
   if (url.pathname === "/" || url.pathname === "/agent-gateway.json") {
     response = json(directory);
+  } else if (url.pathname === "/llms.txt") {
+    response = text(LLMS_TEXT);
+  } else if (url.pathname === "/robots.txt") {
+    response = text(ROBOTS_TEXT);
+  } else if (url.pathname === "/openapi.json") {
+    response = json(OPENAPI_DOCUMENT, 200, {
+      "cache-control": "public, max-age=300, s-maxage=3600",
+    });
   } else if (url.pathname === "/.well-known/kimetsu-agents.json") {
     response = json(wellKnown);
   } else if (

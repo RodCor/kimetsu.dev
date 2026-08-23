@@ -48,6 +48,9 @@ const SITE_ROUTES = new Map([
 const GATEWAY_ROUTES = new Map([
   ["/", ["/", "discovery"]],
   ["/agent-gateway.json", ["/agent-gateway.json", "discovery"]],
+  ["/llms.txt", ["/llms.txt", "discovery"]],
+  ["/openapi.json", ["/openapi.json", "discovery"]],
+  ["/robots.txt", ["/robots.txt", "discovery"]],
   [
     "/.well-known/kimetsu-agents.json",
     ["/.well-known/kimetsu-agents.json", "discovery"],
