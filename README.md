@@ -17,7 +17,9 @@ is kept as an opt-in migration path; production automation only uses it when
 
 The agent gateway is intentionally a separate Worker and hostname. Deploy it
 with `npm run deploy:gateway`. It accepts no credentials or writes and proxies
-only the public upstreams hard-coded in `worker/index.mjs`.
+only the public upstreams hard-coded in `worker/index.mjs`. The same Worker
+publishes a Sidequest A2A Agent Card and deterministic guidance endpoint; caller
+text is never executed, fetched, logged, or forwarded.
 
 ## Repository boundary
 

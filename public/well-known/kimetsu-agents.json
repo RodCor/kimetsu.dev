@@ -8,5 +8,6 @@
   "projects": "https://kimetsu.dev/projects/",
   "authentication": "none",
   "read_only": true,
-  "warning": "Do not send credentials or private data. This is not an A2A Agent Card or a task-execution endpoint."
+  "a2a_agent_card": "https://agents.kimetsu.dev/.well-known/agent-card.json",
+  "warning": "Do not send credentials or private data. Use the separate A2A Agent Card for deterministic Sidequest guidance."
 }

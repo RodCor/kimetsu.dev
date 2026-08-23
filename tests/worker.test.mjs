@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
+  a2aAgentCardV1,
   directory,
   handleGatewayFetch,
   handleRequest,
@@ -59,6 +60,136 @@ test("answers a constrained CORS preflight", async () => {
     "GET, HEAD, OPTIONS",
   );
   assert.equal(response.headers.get("access-control-allow-headers"), "Accept");
+});
+
+test("answers an A2A preflight without allowing credential headers", async () => {
+  const response = await gateway("/a2a/sidequest", { method: "OPTIONS" });
+  assert.equal(response.status, 204);
+  assert.equal(
+    response.headers.get("access-control-allow-methods"),
+    "POST, OPTIONS",
+  );
+  assert.equal(
+    response.headers.get("access-control-allow-headers"),
+    "Content-Type, A2A-Version",
+  );
+});
+
+test("publishes negotiated A2A v1 and default v0.3 Agent Cards", async () => {
+  const v1 = await gateway("/.well-known/agent-card.json", {
+    headers: { "a2a-version": "1.0" },
+  });
+  assert.equal(v1.status, 200);
+  assert.equal(v1.headers.get("vary"), "A2A-Version");
+  assert.deepEqual(await v1.json(), a2aAgentCardV1);
+
+  const legacy = await gateway("/.well-known/agent-card.json");
+  assert.equal(legacy.status, 200);
+  assert.equal((await legacy.json()).protocolVersion, "0.3.0");
+});
+
+test("returns deterministic A2A v1 guidance without echoing caller text", async () => {
+  const privateMarker = "github_pat_private_marker_123456789";
+  const response = await gateway("/a2a/sidequest", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "a2a-version": "1.0",
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: "request-1",
+      method: "SendMessage",
+      params: {
+        message: {
+          messageId: "caller-message",
+          role: "ROLE_USER",
+          parts: [{ text: `How do I vote? ${privateMarker}` }],
+        },
+      },
+    }),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.id, "request-1");
+  assert.equal(body.result.message.role, "ROLE_AGENT");
+  assert.doesNotMatch(JSON.stringify(body), new RegExp(privateMarker));
+  assert.match(body.result.message.parts[0].text, /rotate/i);
+});
+
+test("supports the default A2A v0.3 message method", async () => {
+  const response = await gateway("/a2a/sidequest", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 7,
+      method: "message/send",
+      params: {
+        message: {
+          kind: "message",
+          messageId: "caller-message",
+          role: "user",
+          parts: [{ kind: "text", text: "Where are the proposals?" }],
+        },
+      },
+    }),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.id, 7);
+  assert.equal(body.result.kind, "message");
+  assert.equal(body.result.role, "agent");
+  assert.match(body.result.parts[0].text, /proposal/i);
+});
+
+test("requires explicit version negotiation for A2A v1", async () => {
+  const response = await gateway("/a2a/sidequest", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 8,
+      method: "SendMessage",
+      params: {
+        message: {
+          messageId: "caller-message",
+          role: "ROLE_USER",
+          parts: [{ text: "Where are the proposals?" }],
+        },
+      },
+    }),
+  });
+  assert.equal((await response.json()).error.code, -32009);
+});
+
+test("rejects malformed and unsupported A2A calls safely", async () => {
+  const malformed = await gateway("/a2a/sidequest", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: "{",
+  });
+  assert.equal((await malformed.json()).error.code, -32700);
+
+  const unsupported = await gateway("/a2a/sidequest", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tasks/get" }),
+  });
+  assert.equal((await unsupported.json()).error.code, -32601);
+});
+
+test("rejects oversized A2A bodies before processing caller text", async () => {
+  const response = await gateway("/a2a/sidequest", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "content-length": "16385",
+    },
+    body: "{}",
+  });
+  assert.equal(response.status, 413);
+  assert.equal((await response.json()).error.code, -32600);
 });
 
 test("HEAD returns headers without a body", async () => {
@@ -124,6 +255,10 @@ test("static fallback and Worker agree on project IDs", async () => {
     staticDirectory.projects.map(({ id }) => id),
     directory.projects.map(({ id }) => id),
   );
+  assert.deepEqual(staticDirectory.capabilities, directory.capabilities);
+  assert.deepEqual(staticDirectory.constraints, directory.constraints);
+  assert.deepEqual(staticDirectory.endpoints, directory.endpoints);
+  assert.deepEqual(staticDirectory.registries, directory.registries);
 });
 
 test("telemetry classifies known clients without retaining user-agent text", () => {
@@ -134,6 +269,10 @@ test("telemetry classifies known clients without retaining user-agent text", () 
   assert.deepEqual(classifyGatewayRoute("/v1/sidequest"), [
     "/v1/sidequest",
     "inspection",
+  ]);
+  assert.deepEqual(classifyGatewayRoute("/a2a/sidequest"), [
+    "/a2a/sidequest",
+    "engagement",
   ]);
 });
 

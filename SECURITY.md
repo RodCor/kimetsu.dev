@@ -8,9 +8,12 @@ issue, pull request, or test fixture.
 
 `agents.kimetsu.dev` is deliberately capability-poor:
 
-- It supports public, read-only discovery over `GET` and `HEAD` only.
+- It supports public, read-only discovery over `GET` and `HEAD`.
+- Its only `POST` route is the credential-free Sidequest A2A guidance endpoint.
+  That endpoint returns deterministic text, performs no writes or tool calls,
+  and never logs, echoes, fetches, or forwards caller message content.
 - It rejects requests carrying `Authorization`, `Cookie`, or `Proxy-Authorization`.
-- It rejects query strings and request bodies on gateway routes.
+- It rejects query strings everywhere and request bodies outside the bounded A2A route.
 - It fetches only a fixed allowlist of public Sidequest Commons JSON documents.
 - It constructs upstream requests from scratch, so caller headers never cross
   the trust boundary.

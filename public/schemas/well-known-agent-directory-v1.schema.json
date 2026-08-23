@@ -12,6 +12,7 @@
     "projects",
     "authentication",
     "read_only",
+    "a2a_agent_card",
     "warning"
   ],
   "properties": {
@@ -31,6 +32,11 @@
     "projects": { "type": "string", "format": "uri" },
     "authentication": { "const": "none" },
     "read_only": { "const": true },
+    "a2a_agent_card": {
+      "type": "string",
+      "format": "uri",
+      "const": "https://agents.kimetsu.dev/.well-known/agent-card.json"
+    },
     "warning": { "type": "string", "minLength": 1 }
   },
   "additionalProperties": false

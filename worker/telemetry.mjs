@@ -52,6 +52,11 @@ const GATEWAY_ROUTES = new Map([
     "/.well-known/kimetsu-agents.json",
     ["/.well-known/kimetsu-agents.json", "discovery"],
   ],
+  [
+    "/.well-known/agent-card.json",
+    ["/.well-known/agent-card.json", "discovery"],
+  ],
+  ["/a2a/sidequest", ["/a2a/sidequest", "engagement"]],
   ["/v1/projects", ["/v1/projects", "inspection"]],
   ["/v1/sidequest", ["/v1/sidequest", "inspection"]],
   ["/v1/sidequest/proposals", ["/v1/sidequest/proposals", "engagement"]],
@@ -101,7 +106,7 @@ export function emitRequestTelemetry({
   stage,
   logger = console.log,
 }) {
-  const method = ["GET", "HEAD", "OPTIONS"].includes(request.method)
+  const method = ["GET", "HEAD", "OPTIONS", "POST"].includes(request.method)
     ? request.method
     : "OTHER";
 

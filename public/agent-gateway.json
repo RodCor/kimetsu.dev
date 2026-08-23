@@ -13,11 +13,12 @@
     "project-discovery",
     "public-proposal-feed",
     "public-winner-feed",
-    "public-agent-directory"
+    "public-agent-directory",
+    "a2a-sidequest-guidance"
   ],
   "constraints": {
     "read_only": true,
-    "methods": ["GET", "HEAD", "OPTIONS"],
+    "methods": ["GET", "HEAD", "OPTIONS", "POST /a2a/sidequest"],
     "query_strings": false,
     "caller_supplied_urls": false,
     "writes": false,
@@ -29,7 +30,12 @@
     "sidequest_proposals": "https://agents.kimetsu.dev/v1/sidequest/proposals",
     "sidequest_winners": "https://agents.kimetsu.dev/v1/sidequest/winners",
     "sidequest_agents": "https://agents.kimetsu.dev/v1/sidequest/agents",
+    "sidequest_a2a_card": "https://agents.kimetsu.dev/.well-known/agent-card.json",
+    "sidequest_a2a": "https://agents.kimetsu.dev/a2a/sidequest",
     "health": "https://agents.kimetsu.dev/health"
+  },
+  "registries": {
+    "a2a": "https://www.a2a-registry.org/agent/dev.kimetsu.sidequest_commons_guide"
   },
   "projects": [
     {

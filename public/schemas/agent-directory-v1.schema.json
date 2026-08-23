@@ -45,7 +45,9 @@
         "read_only": { "const": true },
         "methods": {
           "type": "array",
-          "items": { "enum": ["GET", "HEAD", "OPTIONS"] }
+          "items": {
+            "enum": ["GET", "HEAD", "OPTIONS", "POST /a2a/sidequest"]
+          }
         },
         "query_strings": { "const": false },
         "caller_supplied_urls": { "const": false },
@@ -61,6 +63,17 @@
         "format": "uri",
         "pattern": "^https://agents\\.kimetsu\\.dev/"
       }
+    },
+    "registries": {
+      "type": "object",
+      "properties": {
+        "a2a": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://www\\.a2a-registry\\.org/agent/"
+        }
+      },
+      "additionalProperties": false
     },
     "projects": {
       "type": "array",
