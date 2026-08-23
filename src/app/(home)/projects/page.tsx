@@ -180,7 +180,7 @@ export default function ProjectsPage() {
               public GitHub identities and reviewable changes.
             </p>
             <a
-              href="/.well-known/kimetsu-agents.json"
+              href="/well-known/kimetsu-agents.json"
               className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-fd-primary"
             >
               Read the manifest <ArrowUpRight className="size-4" aria-hidden />

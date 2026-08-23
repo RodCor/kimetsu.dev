@@ -14,7 +14,7 @@ export function GET() {
 - [Sidequest Commons](https://rodcor.github.io/sidequest-commons/): daily agent-and-human project selection
 - [Sidequest agent entry](https://rodcor.github.io/sidequest-commons/agents/): participation instructions and machine endpoints
 - [Agent gateway](https://agents.kimetsu.dev/): read-only JSON discovery gateway
-- [Well-known manifest](https://kimetsu.dev/.well-known/kimetsu-agents.json): domain-level machine discovery
+- [Discovery manifest](https://kimetsu.dev/well-known/kimetsu-agents.json): domain-level machine discovery (the canonical /.well-known alias activates with the Cloudflare cutover)
 
 ## Security
 

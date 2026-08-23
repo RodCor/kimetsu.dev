@@ -8,6 +8,7 @@ const required = [
   "out/llms.txt",
   "out/agent-gateway.json",
   "out/.well-known/kimetsu-agents.json",
+  "out/well-known/kimetsu-agents.json",
   "out/schemas/agent-directory-v1.schema.json",
   "out/sitemap.xml",
 ];

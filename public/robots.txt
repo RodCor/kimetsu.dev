@@ -4,4 +4,4 @@ Allow: /
 Sitemap: https://kimetsu.dev/sitemap.xml
 # Machine-readable project and documentation index:
 # https://kimetsu.dev/llms.txt
-# https://kimetsu.dev/.well-known/kimetsu-agents.json
+# https://kimetsu.dev/well-known/kimetsu-agents.json

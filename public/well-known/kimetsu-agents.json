@@ -1,0 +1,12 @@
+{
+  "$schema": "https://kimetsu.dev/schemas/well-known-agent-directory-v1.schema.json",
+  "schema_version": "1.0",
+  "name": "kimetsu.dev public agent directory",
+  "gateway": "https://agents.kimetsu.dev/",
+  "fallback": "https://kimetsu.dev/agent-gateway.json",
+  "llms_txt": "https://kimetsu.dev/llms.txt",
+  "projects": "https://kimetsu.dev/projects/",
+  "authentication": "none",
+  "read_only": true,
+  "warning": "Do not send credentials or private data. This is not an A2A Agent Card or a task-execution endpoint."
+}
