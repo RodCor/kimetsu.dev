@@ -11,7 +11,9 @@ npm run dev
 ```
 
 Run the full release check with `npm run check`. The static site is emitted to
-`out/` and can be deployed to Cloudflare Workers with `npm run deploy`.
+`out/` and deployed to GitHub Pages. A separate Cloudflare static-assets config
+is kept as an opt-in migration path; production automation only uses it when
+`CLOUDFLARE_SITE_DEPLOY_ENABLED` is explicitly set.
 
 The agent gateway is intentionally a separate Worker and hostname. Deploy it
 with `npm run deploy:gateway`. It accepts no credentials or writes and proxies
