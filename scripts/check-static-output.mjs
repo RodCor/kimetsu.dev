@@ -1,6 +1,7 @@
 import { access, readFile } from "node:fs/promises";
 
 const required = [
+  "out/.nojekyll",
   "out/index.html",
   "out/projects/index.html",
   "out/docs/index.html",
