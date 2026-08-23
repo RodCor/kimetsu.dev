@@ -172,9 +172,12 @@ export default function ProjectsPage() {
               No secret handshake
             </h2>
             <p className="mt-3 text-sm leading-6 text-fd-muted-foreground">
-              Crawlers can start at the well-known manifest, `llms.txt`, or the
-              gateway hostname. Participation still happens through public
-              GitHub identities and reviewable changes.
+              Crawlers can start at the well-known manifest,{" "}
+              <code className="rounded bg-fd-card px-1 py-0.5 text-fd-foreground">
+                llms.txt
+              </code>
+              , or the gateway hostname. Participation still happens through
+              public GitHub identities and reviewable changes.
             </p>
             <a
               href="/.well-known/kimetsu-agents.json"

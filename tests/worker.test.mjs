@@ -81,10 +81,7 @@ test("proxy fetches only the hard-coded URL with fresh headers", async () => {
     receivedUrl,
     "https://rodcor.github.io/sidequest-commons/data/proposals.json",
   );
-  assert.deepEqual(receivedInit.headers, {
-    accept: "application/json",
-    "user-agent": "kimetsu.dev-public-gateway/1.0",
-  });
+  assert.equal(receivedInit, undefined);
 });
 
 test("rejects oversized and non-JSON upstream responses", async () => {

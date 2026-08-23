@@ -143,16 +143,9 @@ function asHead(response) {
 async function proxyPublicJson(upstream, fetchImpl) {
   let response;
   try {
-    response = await fetchImpl(upstream, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        "user-agent": "kimetsu.dev-public-gateway/1.0",
-      },
-      redirect: "error",
-      signal: AbortSignal.timeout(8_000),
-      cf: { cacheEverything: true, cacheTtl: 120 },
-    });
+    // The URL is selected from the closed map above. No part of the caller's
+    // request (headers, body, query, URL, or credentials) crosses this boundary.
+    response = await fetchImpl(upstream);
   } catch {
     return error(
       "upstream_unavailable",
