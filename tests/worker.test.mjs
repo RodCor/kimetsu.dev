@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { directory, handleRequest } from "../worker/index.mjs";
+import {
+  directory,
+  handleGatewayFetch,
+  handleRequest,
+} from "../worker/index.mjs";
+import { handleSiteRequest } from "../worker/site.mjs";
+import { classifyClient, classifyGatewayRoute } from "../worker/telemetry.mjs";
 
 const gateway = (path = "/", init = {}) =>
   handleRequest(new Request(`https://agents.kimetsu.dev${path}`, init));
@@ -118,4 +124,62 @@ test("static fallback and Worker agree on project IDs", async () => {
     staticDirectory.projects.map(({ id }) => id),
     directory.projects.map(({ id }) => id),
   );
+});
+
+test("telemetry classifies known clients without retaining user-agent text", () => {
+  const request = new Request("https://agents.kimetsu.dev/v1/sidequest", {
+    headers: { "user-agent": "OAI-SearchBot/1.0 private-marker" },
+  });
+  assert.equal(classifyClient(request), "openai");
+  assert.deepEqual(classifyGatewayRoute("/v1/sidequest"), [
+    "/v1/sidequest",
+    "inspection",
+  ]);
+});
+
+test("gateway telemetry excludes credentials, queries, and unknown paths", async () => {
+  const logs = [];
+  const response = await handleGatewayFetch(
+    new Request("https://agents.kimetsu.dev/not-a-route?token=query-secret", {
+      headers: {
+        authorization: "Bearer header-secret",
+        "user-agent": "private-agent-marker",
+      },
+    }),
+    globalThis.fetch,
+    (entry) => logs.push(entry),
+  );
+  assert.equal(response.status, 400);
+  assert.equal(logs.length, 1);
+  const event = JSON.parse(logs[0]);
+  assert.equal(event.route, "other");
+  assert.equal(event.stage, "rejected");
+  assert.equal(event.client_family, "unverified-automation");
+  assert.doesNotMatch(
+    logs[0],
+    /header-secret|query-secret|private-agent-marker/,
+  );
+});
+
+test("site Worker serves bound assets and emits one coarse event", async () => {
+  const logs = [];
+  const response = await handleSiteRequest(
+    new Request("https://kimetsu.dev/llms.txt", {
+      headers: { "user-agent": "Sidequest-Discovery-Monitor/1.0" },
+    }),
+    {
+      fetch: async () =>
+        new Response("# Kimetsu", {
+          headers: { "content-type": "text/plain" },
+        }),
+    },
+    (entry) => logs.push(entry),
+  );
+  assert.equal(response.status, 200);
+  assert.equal(await response.text(), "# Kimetsu");
+  assert.equal(logs.length, 1);
+  const event = JSON.parse(logs[0]);
+  assert.equal(event.route, "/llms.txt");
+  assert.equal(event.stage, "discovery");
+  assert.equal(event.client_family, "synthetic-monitor");
 });

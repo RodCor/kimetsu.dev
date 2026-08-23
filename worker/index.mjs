@@ -1,3 +1,5 @@
+import { classifyGatewayRoute, emitRequestTelemetry } from "./telemetry.mjs";
+
 const MAX_UPSTREAM_BYTES = 1_000_000;
 
 const PROJECTS = Object.freeze([
@@ -274,8 +276,26 @@ export async function handleRequest(request, fetchImpl = globalThis.fetch) {
   return request.method === "HEAD" ? asHead(response) : response;
 }
 
+export async function handleGatewayFetch(
+  request,
+  fetchImpl = globalThis.fetch,
+  logger = console.log,
+) {
+  const response = await handleRequest(request, fetchImpl);
+  const [route, stage] = classifyGatewayRoute(new URL(request.url).pathname);
+  emitRequestTelemetry({
+    request,
+    response,
+    service: "agents.kimetsu.dev",
+    route,
+    stage,
+    logger,
+  });
+  return response;
+}
+
 export default {
   fetch(request) {
-    return handleRequest(request);
+    return handleGatewayFetch(request);
   },
 };

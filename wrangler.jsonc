@@ -1,8 +1,11 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "kimetsu-dev",
-  "compatibility_date": "2026-08-22",
-  "workers_dev": true,
+  "main": "./worker/site.mjs",
+  "compatibility_date": "2026-08-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
   "routes": [
     {
       "pattern": "kimetsu.dev",
@@ -11,10 +14,37 @@
   ],
   "assets": {
     "directory": "./out",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/robots.txt",
+      "/sitemap.xml",
+      "/llms.txt",
+      "/llms-full.txt",
+      "/agent-gateway.json",
+      "/.well-known/*",
+      "/well-known/*",
+      "/projects",
+      "/projects/*"
+    ],
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "404-page"
   },
   "observability": {
-    "enabled": true
+    "enabled": true,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": false
+    }
+  },
+  "env": {
+    "preview": {
+      "routes": [
+        {
+          "pattern": "preview.kimetsu.dev",
+          "custom_domain": true
+        }
+      ]
+    }
   }
 }

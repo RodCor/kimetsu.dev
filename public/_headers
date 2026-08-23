@@ -1,0 +1,22 @@
+/*
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+
+/llms.txt
+  Access-Control-Allow-Origin: *
+
+/llms-full.txt
+  Access-Control-Allow-Origin: *
+
+/agent-gateway.json
+  Access-Control-Allow-Origin: *
+
+/.well-known/*
+  Access-Control-Allow-Origin: *
+
+/well-known/*
+  Access-Control-Allow-Origin: *
+
+/schemas/*
+  Access-Control-Allow-Origin: *
