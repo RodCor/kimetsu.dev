@@ -35,7 +35,8 @@
     "health": "https://agents.kimetsu.dev/health"
   },
   "registries": {
-    "a2a": "https://www.a2a-registry.org/agent/dev.kimetsu.sidequest_commons_guide"
+    "a2a": "https://www.a2a-registry.org/agent/dev.kimetsu.sidequest_commons_guide",
+    "a2a_live": "https://a2aregistry.org/agents/df467402-e691-43ce-b754-f774a4928b81/"
   },
   "projects": [
     {

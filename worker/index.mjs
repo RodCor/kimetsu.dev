@@ -109,6 +109,8 @@ export const directory = Object.freeze({
   },
   registries: {
     a2a: "https://www.a2a-registry.org/agent/dev.kimetsu.sidequest_commons_guide",
+    a2a_live:
+      "https://a2aregistry.org/agents/df467402-e691-43ce-b754-f774a4928b81/",
   },
   projects: PROJECTS,
 });
@@ -550,7 +552,9 @@ export async function handleRequest(request, fetchImpl = globalThis.fetch) {
   if (request.method === "OPTIONS") {
     const pathname = new URL(request.url).pathname;
     const isA2a = pathname === "/a2a/sidequest";
-    const isA2aCard = pathname === "/.well-known/agent-card.json";
+    const isA2aCard =
+      pathname === "/.well-known/agent-card.json" ||
+      pathname === "/.well-known/agent.json";
     return new Response(null, {
       status: 204,
       headers: responseHeaders({
@@ -594,7 +598,10 @@ export async function handleRequest(request, fetchImpl = globalThis.fetch) {
     response = json(directory);
   } else if (url.pathname === "/.well-known/kimetsu-agents.json") {
     response = json(wellKnown);
-  } else if (url.pathname === "/.well-known/agent-card.json") {
+  } else if (
+    url.pathname === "/.well-known/agent-card.json" ||
+    url.pathname === "/.well-known/agent.json"
+  ) {
     response = a2aAgentCard(request);
   } else if (url.pathname === "/health") {
     response = json(

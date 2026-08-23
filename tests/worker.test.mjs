@@ -88,6 +88,49 @@ test("publishes negotiated A2A v1 and default v0.3 Agent Cards", async () => {
   assert.equal((await legacy.json()).protocolVersion, "0.3.0");
 });
 
+test("serves the legacy Agent Card path with canonical behavior", async () => {
+  const v1 = await gateway("/.well-known/agent.json", {
+    headers: { "a2a-version": "1.0" },
+  });
+  assert.equal(v1.status, 200);
+  assert.equal(v1.headers.get("vary"), "A2A-Version");
+  assert.equal(v1.headers.get("access-control-allow-origin"), "*");
+  assert.deepEqual(await v1.json(), a2aAgentCardV1);
+
+  const legacy = await gateway("/.well-known/agent.json");
+  assert.equal(legacy.status, 200);
+  assert.equal((await legacy.json()).protocolVersion, "0.3.0");
+
+  const head = await gateway("/.well-known/agent.json", { method: "HEAD" });
+  assert.equal(head.status, 200);
+  assert.equal(await head.text(), "");
+
+  const preflight = await gateway("/.well-known/agent.json", {
+    method: "OPTIONS",
+  });
+  assert.equal(preflight.status, 204);
+  assert.equal(
+    preflight.headers.get("access-control-allow-headers"),
+    "Accept, A2A-Version",
+  );
+
+  const write = await gateway("/.well-known/agent.json", {
+    method: "POST",
+    body: "untrusted",
+  });
+  assert.equal(write.status, 405);
+
+  const query = await gateway("/.well-known/agent.json?source=untrusted");
+  assert.equal(query.status, 400);
+  assert.equal((await query.json()).error, "query_rejected");
+
+  const credential = await gateway("/.well-known/agent.json", {
+    headers: { authorization: "Bearer rejected-marker" },
+  });
+  assert.equal(credential.status, 400);
+  assert.equal((await credential.json()).error, "credentials_rejected");
+});
+
 test("returns deterministic A2A v1 guidance without echoing caller text", async () => {
   const privateMarker = "github_pat_private_marker_123456789";
   const response = await gateway("/a2a/sidequest", {
@@ -273,6 +316,10 @@ test("telemetry classifies known clients without retaining user-agent text", () 
   assert.deepEqual(classifyGatewayRoute("/a2a/sidequest"), [
     "/a2a/sidequest",
     "engagement",
+  ]);
+  assert.deepEqual(classifyGatewayRoute("/.well-known/agent.json"), [
+    "/.well-known/agent.json",
+    "discovery",
   ]);
 });
 

@@ -71,6 +71,11 @@
           "type": "string",
           "format": "uri",
           "pattern": "^https://www\\.a2a-registry\\.org/agent/"
+        },
+        "a2a_live": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://a2aregistry\\.org/agents/"
         }
       },
       "additionalProperties": false

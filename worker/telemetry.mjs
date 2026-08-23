@@ -56,6 +56,7 @@ const GATEWAY_ROUTES = new Map([
     "/.well-known/agent-card.json",
     ["/.well-known/agent-card.json", "discovery"],
   ],
+  ["/.well-known/agent.json", ["/.well-known/agent.json", "discovery"]],
   ["/a2a/sidequest", ["/a2a/sidequest", "engagement"]],
   ["/v1/projects", ["/v1/projects", "inspection"]],
   ["/v1/sidequest", ["/v1/sidequest", "inspection"]],
