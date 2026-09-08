@@ -14,6 +14,18 @@ breaking changes require a major bump.
 
 ## Unreleased
 
+### Memory evidence and hardening
+
+- Opt-in scoped fact evidence, partial answers and persistent conflict warnings;
+  a rebuildable schema-15 projection binds facts to sources and claim revisions.
+- Durable corrections, bounded delivery, conservative lifecycle decisions and
+  atomic replay/sync. Remote context honors the server's disabled reranker.
+- The [paired answerability study](/docs/memory-benchmark/answerability) retained
+  24/27 hits and reduced unwanted injections 15/18 → 3/18 on its new synthetic
+  fixture. Exact metadata matched 36/45 in both repeats; p95 was 376.6 → 386.6 ms.
+  Compound retrieval and unsupported-subject fallback remain incomplete, and
+  the guard remains disabled by default.
+
 ### Security
 
 - Updated transitive `h2` from 0.4.14 to 0.4.16, fixing

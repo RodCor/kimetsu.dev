@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     template: "%s | kimetsu.dev",
   },
   description:
-    "Kimetsu documentation, open agent projects, and a credential-free discovery gateway.",
+    "Local memory for coding agents. Carry project decisions, conventions, and fixes across sessions with one Rust binary. Explore setup, documentation, and measured results.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     siteName: "kimetsu.dev",
     title: "Kimetsu — proactive memory for coding agents",
     description:
-      "Kimetsu documentation, open agent projects, and a credential-free discovery gateway.",
+      "Carry project decisions, conventions, and fixes across coding sessions. Local memory, one Rust binary, and benchmarks you can inspect.",
   },
 };
 

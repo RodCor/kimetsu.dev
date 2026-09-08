@@ -1,0 +1,83 @@
+---
+title: "Structured answerability (unreleased)"
+description: "Paired evidence-delivery measurements, configuration and remaining gaps for the opt-in fact guard."
+---
+
+This is **unreleased, opt-in work**, not a new overall BrainBench score or a
+claim about generated-answer accuracy. It adds source-bound configuration facts
+and reports which requested attributes are supported, missing or conflicting.
+
+## Paired results — September 7, 2026
+
+The campaign contains 688 observations over 299 distinct scenario/query cases.
+Both sides enable the fact guard; the baseline is the preceding answerability
+build and the candidate adds structured evidence. No positive-hit losses or
+execution errors were observed.
+
+| Fixture | Positive hits, old → new | Unwanted injections, old → new | Subsequent p95, old → new |
+|---|---|---|---|
+| Development: 210 queries | 169/197 → 169/197 | 7/13 → 7/13 | 1,111.7 → 1,094.0 ms |
+| Prior answerability: 44 queries | 24/24 → 24/24 | 0/20 → 0/20 | 409.1 → 380.7 ms |
+| New structured facts: 45 queries, two repeats | 24/27 → 24/27 | 15/18 → 3/18 | 376.6 → 386.6 ms |
+
+On the new fixture, **80% fewer unwanted injections** means 15 failures became
+3, or 83.3% → 16.7% of the 18 negative cases. Exact status, values, missing
+attributes and conflicts matched **36/45 cases in each repeat**: 33/42 direct
+fact questions and all three broad controls. Rankings and metadata meaning
+were stable across repeats.
+
+The new-fixture p95 increased about **2.7%**, and mean MCP result size increased
+from **613.5 to 651.2 bytes** (6.2%). Peak MCP working set remained about
+653.5 MiB. These short runs do not establish zero overhead or a statistically
+significant speed change.
+
+All runs used cached BGE-small embeddings, default thread settings and a 6,000
+output budget. Development used TinyBERT with cutoff 0.30; the other fixtures
+used the optional quantized mMARCO reranker with cutoff 0.55. No model default
+was promoted. The byte budget includes serialization and is not billed tokens.
+
+## What changes for an agent
+
+With `Orchid staging gateway port is 7319.` recorded, a recognized port-and-timeout
+question can return port evidence and identify timeout as missing. Production
+evidence cannot fill a staging request. Conflicting eligible values stay marked
+as conflicting even when a capsule cap or budget removes one source. Exact
+unit comparison treats `30 seconds` and `30000 ms` as equivalent.
+
+On a build containing this change, enable it with:
+
+```sh
+kimetsu config set broker.explicit_fact_guard true
+```
+
+The default is `false`; set it back to `false` to disable it. Published packages
+may not contain this unreleased feature. An older warm daemon must be restarted
+with the updated build to use its new behavior.
+
+Schema 15 maintains a rebuildable SQLite projection bound to claim revisions,
+source events, validity and exact evidence excerpts. Corrections and replay
+refresh the projection; the tagged agent record path is covered. Ordinary
+retrieval skips fact hydration when the guard is disabled, but writes still
+maintain the projection. No extra model calls are needed; evidence sent to an
+agent still consumes context tokens.
+
+## Remaining gaps and measurement limits
+
+Six compound-question cases per repeat omitted port evidence: three retrieved
+nothing and three retrieved retries alone. Hit@4 counts the latter as hits,
+which shows why retrieval hit rate is not complete answerability. Three cases
+using the subject word `Unknown` fell outside the conservative grammar and
+returned unrelated evidence through legacy fallback. These account for the
+remaining unwanted injections.
+
+The fixture is assistant-authored and repeats templates across three project
+names. It is not 45 independent task families, does not measure an LLM reader,
+and cannot certify corpus-wide conflict detection. No grammar, parameters or
+expectations changed after these results. Retrieval per requested attribute and
+safer unsupported-subject handling remain follow-up work.
+
+The tested implementation passed 1,470 workspace tests (six ignored), 132
+benchmark Rust tests, 18 Python tests and six release CLI/MCP probes.
+
+Source: [full report, frozen fixtures, raw observations and hashes](https://github.com/RodCor/kimetsu/blob/281c6df/docs/audits/2026-09-07-structured-facts.md).
+

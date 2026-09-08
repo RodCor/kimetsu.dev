@@ -10,18 +10,187 @@
 
 /* Kimetsu brand accent: "code dark, run green". Contrast-safe in both modes. */
 :root {
-  --color-fd-primary: #15803d; /* green-700, AA on light surfaces */
+  --color-fd-primary: #126c33;
   --color-fd-primary-foreground: #ffffff;
+  --color-fd-muted-foreground: #626262;
 }
 
 .dark {
   --color-fd-primary: #22c55e; /* green-500 on dark */
   --color-fd-primary-foreground: #052e16; /* dark text on bright green */
   --color-fd-ring: #22c55e;
+  --color-fd-muted-foreground: #a3a3a3;
 }
 
 html {
   scrollbar-gutter: stable;
+}
+
+/* Home: readable static content, compact controls, and a visible keyboard path. */
+.km-home {
+  min-width: 0;
+}
+
+.km-home :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+.km-home :is(a, button, select, summary, pre):focus-visible,
+.km-skip-link:focus-visible {
+  outline: 2px solid var(--color-fd-primary);
+  outline-offset: 4px;
+}
+
+.km-home :is(a, button, select, summary) {
+  touch-action: manipulation;
+}
+
+.km-skip-link {
+  position: fixed;
+  top: -6rem;
+  left: 1rem;
+  z-index: 100;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-fd-primary);
+  color: var(--color-fd-primary-foreground);
+}
+
+.km-skip-link:focus {
+  top: 1rem;
+}
+
+.km-hero {
+  padding: 5.5rem 1.5rem 5rem;
+  background-image: radial-gradient(
+    var(--color-fd-border) 0.7px,
+    transparent 0.7px
+  );
+  background-size: 24px 24px;
+}
+
+.km-hero-grid {
+  display: grid;
+  gap: 3.5rem;
+  max-width: 72rem;
+  margin-inline: auto;
+  align-items: center;
+}
+
+.km-memory-example {
+  overflow: hidden;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 1rem;
+  background: var(--color-fd-background);
+  box-shadow: 0 14px 45px -28px rgb(0 0 0 / 35%);
+}
+
+.km-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 50%;
+  color: var(--color-fd-primary);
+}
+
+.km-section {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 4.5rem 1.5rem;
+  border-bottom: 1px solid var(--color-fd-border);
+}
+
+.km-eyebrow {
+  margin-bottom: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-fd-primary);
+}
+
+.km-heading {
+  max-width: 40rem;
+  font-family: var(--font-mono);
+  font-size: clamp(1.65rem, 3vw, 2.15rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+}
+
+.km-button-primary,
+.km-button-secondary,
+.km-copy-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.6rem;
+  padding: 0.65rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    border-color 150ms;
+}
+
+.km-button-primary {
+  border-color: var(--color-fd-primary);
+  background: var(--color-fd-primary);
+  color: var(--color-fd-primary-foreground);
+}
+
+.km-button-primary:hover {
+  background: color-mix(in srgb, var(--color-fd-primary), black 12%);
+}
+
+.km-button-secondary {
+  background: var(--color-fd-background);
+}
+
+.km-button-secondary:hover,
+.km-copy-button:hover {
+  border-color: var(--color-fd-primary);
+  background: var(--color-fd-accent);
+}
+
+.km-text-link {
+  color: var(--color-fd-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-underline-offset: 4px;
+}
+
+.km-text-link:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 1024px) {
+  .km-hero-grid {
+    grid-template-columns: 1.15fr 0.85fr;
+  }
+}
+
+@media (max-width: 639px) {
+  .km-hero {
+    padding: 3rem 1.25rem;
+  }
+
+  .km-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .km-home table :is(th, td) {
+    padding: 0.85rem 0.6rem;
+  }
 }
 
 html > body[data-scroll-locked] {
@@ -29,34 +198,11 @@ html > body[data-scroll-locked] {
   --removed-body-scroll-bar-size: 0px !important;
 }
 
-/* ── Motion ──────────────────────────────────────────────────────────────
-   Scroll/entrance reveals + tab-panel transition. CSS-only, dependency-free.
-   Everything collapses to "just show it" under prefers-reduced-motion. */
-
-@keyframes kimetsu-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Hero + above-the-fold: play once on load. Stagger via inline animation-delay. */
-.km-enter {
-  animation: kimetsu-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Tab panels: replay on switch (keyed remount). */
-.km-panel-in {
-  animation: kimetsu-fade-up 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .km-enter,
-  .km-panel-in {
-    animation: none;
+  .km-home *,
+  .km-home *::before,
+  .km-home *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

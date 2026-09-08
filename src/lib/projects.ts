@@ -28,7 +28,7 @@ export const projects: readonly Project[] = [
     name: "Kimetsu",
     eyebrow: "Memory infrastructure",
     description:
-      "A local, model-free memory system that lets coding agents retain useful project knowledge and improve across sessions.",
+      "A local memory system that lets coding agents retain useful project knowledge and carry it across sessions.",
     status: "Active",
     website: "https://kimetsu.dev/docs/",
     repository: "https://github.com/RodCor/kimetsu",

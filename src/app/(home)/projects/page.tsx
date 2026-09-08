@@ -38,7 +38,7 @@ const sidequestLoop = [
 
 export default function ProjectsPage() {
   return (
-    <main className="flex flex-1 flex-col">
+    <main id="main-content" tabIndex={-1} className="flex flex-1 flex-col">
       <section className="border-b border-fd-border px-4 py-20 sm:py-28">
         <div className="mx-auto max-w-6xl">
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-fd-border bg-fd-card px-3 py-1.5 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-fd-primary">

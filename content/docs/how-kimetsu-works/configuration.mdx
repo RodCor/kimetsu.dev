@@ -5,6 +5,15 @@ description: "Every knob in project.toml, the off-switches, and the environment 
 
 Every knob in `project.toml`, the off-switches, and the environment overrides.
 
+## Unreleased fact guard
+
+On builds containing structured fact evidence, `broker.explicit_fact_guard`
+defaults to `false`. Enable with `kimetsu config set broker.explicit_fact_guard true`.
+It adds scoped supported/missing/conflicting evidence without extra model calls;
+injected context still consumes tokens. See [results, storage behavior and
+limitations](/docs/memory-benchmark/answerability). This setting is unreleased
+and is deliberately separate from the published configuration example below.
+
 Project config lives in `<project>/project.toml`:
 
 ```toml
@@ -39,7 +48,7 @@ budget_run_cap_tokens = 8000  # per-run ceiling on injected tokens
 compress_capsules = true      # strip tags, cap at 3 sentences; ranking unaffected
 session_dedupe = true         # skip capsules already injected this session
 warm_start = true             # SessionStart injects the digest + episodic resume
-answer_grade_min_score = 0.92 # top capsule >= this gets a "Verified answer" prefix
+answer_grade_min_score = 0.92 # relevance marker; not independent verification
 proactive_prefetch = false    # opt-in trajectory-based pre-fetch at PreToolUse
 
 [storage]
