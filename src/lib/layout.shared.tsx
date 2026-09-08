@@ -1,4 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import { GitFork } from "lucide-react";
 import Image from "next/image";
 import { appName, links } from "./shared";
 
@@ -21,11 +22,18 @@ export function baseOptions(): BaseLayoutProps {
         </>
       ),
     },
-    githubUrl: links.github,
     links: [
       {
-        text: "Projects",
-        url: "/projects",
+        type: "icon",
+        label: "Kimetsu on GitHub",
+        text: "GitHub",
+        icon: <GitFork aria-hidden />,
+        url: links.github,
+        external: true,
+      },
+      {
+        text: "Install",
+        url: "/docs/install",
         active: "nested-url",
       },
       {
@@ -34,14 +42,14 @@ export function baseOptions(): BaseLayoutProps {
         active: "nested-url",
       },
       {
-        text: "crates.io",
-        url: links.crates,
-        external: true,
+        text: "Benchmarks",
+        url: "/docs/memory-benchmark",
+        active: "nested-url",
       },
       {
-        text: "npm",
-        url: links.npm,
-        external: true,
+        text: "Projects",
+        url: "/projects",
+        active: "nested-url",
       },
     ],
   };
