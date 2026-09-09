@@ -9,9 +9,13 @@ them rather than take our word for it.
 
 ## The headline numbers
 
-The [unreleased structured-answerability study](/docs/memory-benchmark/answerability)
+The [v2.8.0 structured-answerability study](/docs/memory-benchmark/answerability)
 reports a separate paired experiment: unwanted injections 15/18 → 3/18, with
-24/27 positive hits retained. It does not replace the published scores below.
+24/27 positive hits retained and exact evidence metadata matching 36/45 cases
+per repeat. P95 changed from 376.6 to 386.6 ms; mean response size from 613.5
+to 651.2 bytes. The linked study records build provenance and release status.
+It does not replace the historical published scores below or remeasure them
+on v2.8.0.
 
 | benchmark | result |
 |-----------|--------|
@@ -24,7 +28,7 @@ reports a separate paired experiment: unwanted injections 15/18 → 3/18, with
 | stale-hit rate | **0.091** (was 0.500 on flat retrieval) |
 | cost per solved task | **~13x cheaper** than a no-brain baseline |
 
-Every result uses `jina-v2-base-code` + the `ms-marco-tinybert-l-2-v2`
+The historical results in the table use `jina-v2-base-code` + the `ms-marco-tinybert-l-2-v2`
 cross-encoder reranker unless noted, and the memory pipeline makes zero LLM
 calls: the reader in the public benchmarks answers questions, it never stores
 or retrieves.

@@ -43,7 +43,7 @@ const questions = [
   {
     question: "What do the new benchmark numbers prove?",
     answer:
-      "They measure delivery of stored evidence on a frozen synthetic fixture. They do not measure whether an agent gives a correct final answer. The structured-fact guard is unreleased and opt-in, and compound questions can still miss an attribute.",
+      "They measure delivery of stored evidence on a frozen synthetic fixture. They do not measure whether an agent gives a correct final answer. The v2.8.0 structured-fact guard is opt-in, and compound questions can still miss an attribute.",
   },
 ];
 
@@ -153,7 +153,7 @@ export default function HomePage() {
               Better memory knows when evidence is missing.
             </h2>
             <p className="mt-4 leading-7 text-fd-muted-foreground">
-              Our latest structured-answerability experiment reduced unwanted
+              The structured-answerability study for v2.8.0 reduced unwanted
               injections while preserving positive retrieval hits.
             </p>
             <p className="mt-4 text-sm leading-6 text-fd-muted-foreground">
@@ -172,7 +172,7 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-fd-border p-5">
               <h3 className="font-semibold">Structured fact guard</h3>
               <span className="rounded-full border border-fd-border px-3 py-1 text-xs text-fd-muted-foreground">
-                Unreleased · Opt-in
+                v2.8.0 · Opt-in
               </span>
             </div>
             <table className="w-full text-sm">
@@ -196,6 +196,7 @@ export default function HomePage() {
                 {[
                   ["Unwanted injections ↓", "15/18", "3/18"],
                   ["Positive retrieval hits", "24/27", "24/27"],
+                  ["Exact evidence metadata", "Not emitted", "36/45 (80%)"],
                   ["P95 latency", "376.6 ms", "386.6 ms"],
                   ["Mean response bytes", "613.5", "651.2"],
                 ].map(([label, before, after]) => (
@@ -213,7 +214,9 @@ export default function HomePage() {
             </table>
             <p className="border-t border-fd-border p-5 text-xs leading-5 text-fd-muted-foreground">
               80% fewer unwanted injections; p95 latency increased by about
-              2.7%. This feature remains disabled by default.
+              2.7%. This feature remains disabled by default. Measurements use
+              the pre-release implementation; see the study for build
+              fingerprints and publication status.
             </p>
           </div>
         </div>
