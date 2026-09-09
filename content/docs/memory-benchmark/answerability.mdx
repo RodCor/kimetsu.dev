@@ -1,11 +1,29 @@
 ---
-title: "Structured answerability (unreleased)"
+title: "Structured answerability (v2.8.0)"
 description: "Paired evidence-delivery measurements, configuration and remaining gaps for the opt-in fact guard."
 ---
 
-This is **unreleased, opt-in work**, not a new overall BrainBench score or a
-claim about generated-answer accuracy. It adds source-bound configuration facts
+These are **v2.8.0 opt-in evidence-delivery results**, not a new overall
+BrainBench score or a claim about generated-answer accuracy. It adds source-bound configuration facts
 and reports which requested attributes are supported, missing or conflicting.
+
+**Release status checked September 9, 2026:** the v2.8.0 implementation is
+[merged](https://github.com/RodCor/kimetsu/pull/45), while the latest published
+GitHub release is still v2.7.0. These measurements use implementation `3ae8329`
+and harness `2c74dad`; they are not a new run of a tagged v2.8.0 binary or a
+v2.7.0-versus-v2.8.0 comparison.
+
+## v2.8.0 metric summary
+
+Frozen structured-fact fixture: 45 cases, repeated twice.
+
+| Metric | Baseline | Candidate | Interpretation |
+|---|---|---|---|
+| Unwanted injections | 15/18 (83.3%) | 3/18 (16.7%) | 80% fewer failures; 66.7 percentage points lower |
+| Positive retrieval hits | 24/27 (88.9%) | 24/27 (88.9%) | No positive-hit loss |
+| Exact evidence metadata | Not emitted | 36/45 (80%) per repeat | Not generated-answer accuracy |
+| Subsequent-query p95 | 376.6 ms | 386.6 ms | +10.0 ms (+2.7%) |
+| Mean MCP response bytes | 613.5 | 651.2 | +37.8 bytes (+6.2%) |
 
 ## Paired results — September 7, 2026
 
@@ -50,8 +68,8 @@ On a build containing this change, enable it with:
 kimetsu config set broker.explicit_fact_guard true
 ```
 
-The default is `false`; set it back to `false` to disable it. Published packages
-may not contain this unreleased feature. An older warm daemon must be restarted
+The default is `false`; set it back to `false` to disable it. Use v2.8.0 or
+a source build containing the merged changes; v2.7.0 packages lack this feature. An older warm daemon must be restarted
 with the updated build to use its new behavior.
 
 Schema 15 maintains a rebuildable SQLite projection bound to claim revisions,
@@ -76,8 +94,11 @@ and cannot certify corpus-wide conflict detection. No grammar, parameters or
 expectations changed after these results. Retrieval per requested attribute and
 safer unsupported-subject handling remain follow-up work.
 
-The tested implementation passed 1,470 workspace tests (six ignored), 132
-benchmark Rust tests, 18 Python tests and six release CLI/MCP probes.
+The measured implementation passed 1,470 workspace tests (six ignored), 132
+benchmark Rust tests, 18 Python tests and six release CLI/MCP probes. Separate
+v2.8.0 release-preparation validation passed **1,500 workspace tests**, six
+ignored, plus **132 benchmark Rust tests** after the dependency refresh.
+[Release validation and security scope](https://github.com/RodCor/kimetsu/blob/785c3df/docs/audits/2026-09-08-release-security.md).
 
 Source: [full report, frozen fixtures, raw observations and hashes](https://github.com/RodCor/kimetsu/blob/281c6df/docs/audits/2026-09-07-structured-facts.md).
 

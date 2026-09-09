@@ -5,14 +5,15 @@ description: "Every knob in project.toml, the off-switches, and the environment 
 
 Every knob in `project.toml`, the off-switches, and the environment overrides.
 
-## Unreleased fact guard
+## v2.8.0 fact guard (opt-in)
 
 On builds containing structured fact evidence, `broker.explicit_fact_guard`
 defaults to `false`. Enable with `kimetsu config set broker.explicit_fact_guard true`.
 It adds scoped supported/missing/conflicting evidence without extra model calls;
 injected context still consumes tokens. See [results, storage behavior and
-limitations](/docs/memory-benchmark/answerability). This setting is unreleased
-and is deliberately separate from the published configuration example below.
+limitations and publication status](/docs/memory-benchmark/answerability).
+Requires v2.8.0 or a source build containing the merged changes; it is separate
+from the historical configuration example below.
 
 Project config lives in `<project>/project.toml`:
 

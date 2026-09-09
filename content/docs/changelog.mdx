@@ -12,7 +12,11 @@ onward the project follows SemVer normally: patch releases are
 bug-fix-only, minor releases are backward-compatible additions, and
 breaking changes require a major bump.
 
-## Unreleased
+## v2.8.0: Durable memory and scoped answerability
+
+Merged into main; release publication pending as of September 9, 2026. The
+[metric summary](/docs/memory-benchmark/answerability) preserves the measured
+pre-release build fingerprints and limitations.
 
 ### Memory evidence and hardening
 
@@ -23,6 +27,8 @@ breaking changes require a major bump.
 - The [paired answerability study](/docs/memory-benchmark/answerability) retained
   24/27 hits and reduced unwanted injections 15/18 → 3/18 on its new synthetic
   fixture. Exact metadata matched 36/45 in both repeats; p95 was 376.6 → 386.6 ms.
+  Mean MCP response bytes increased 613.5 → 651.2 (+6.2%); p95 increased
+  2.7%. These measure evidence delivery, not final-answer accuracy.
   Compound retrieval and unsupported-subject fallback remain incomplete, and
   the guard remains disabled by default.
 
@@ -30,6 +36,18 @@ breaking changes require a major bump.
 
 - Updated transitive `h2` from 0.4.14 to 0.4.16, fixing
   `RUSTSEC-2026-0258` (unbounded empty HTTP/2 DATA frames).
+
+- Reject redirected repository roots and Windows path aliases; validate existing
+  brain state paths before initialization shortcuts.
+- Enforce HTTPS and disable redirects for signed Bedrock requests; validate
+  region labels and encode model IDs as path segments.
+- Replace yanked `der` 0.8.0 with 0.8.2.
+
+### Release validation
+
+- 1,500 workspace tests passed with six intentionally ignored; 132 benchmark
+  Rust tests passed after the dependency refresh.
+- Release notes now support titled changelog headings and reject empty output.
 
 ## v2.7.0: Retrieval that knows when to stay silent
 
