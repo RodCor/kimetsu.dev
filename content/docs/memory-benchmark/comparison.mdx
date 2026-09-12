@@ -22,14 +22,15 @@ bill, or the cloud.**
 | LongMemEval (`_s`) | **83.0%** (200-q slice) · ~80.9% weighted | 94.4% (their reader + harness) | not reported |
 | LoCoMo (1,540 q) | **89.4%** | 92.5% | not reported |
 | BEAM 100K | **73.3%** (400 probes) | n/a | 79% |
-| BEAM **1M** | **66.0%** (300 probes) | 62% | not reported |
+| BEAM **1M** | **66.0%** (300 probes) | 64.1% (700 probes) | not reported |
 | BEAM 10M | future work | 48.6% | 67% |
 
 Caveats, because the table is not apples-to-apples:
 
-- **Only the 1M row is a matched bucket.** Our 66.0% edges mem0's 62%, but with
-  a different reader and 15 of 35 conversations: read it as at least on par,
-  not a decisive win.
+- **The 1M row uses the same token bucket, with different setups.** Kimetsu's
+  66.0% covers 15 of 35 conversations; mem0 reports 64.1% over 700 probes.
+  The readers and samples differ, so the score difference does not establish
+  a head-to-head win.
 - **Cognee leads at 100K/10M.** Our 73.3% matches the prior public state of the
   art on 100K (the 0.735 Cognee cites as the number it beat), model-free.
   Cognee needs an LLM key on both the write and read paths.
@@ -45,6 +46,9 @@ Sources: mem0's [2026 benchmark roundup](https://mem0.ai/blog/ai-memory-benchmar
 Cognee's [BEAM figures](https://github.com/topoteretes/cognee), the
 [LongMemEval](https://arxiv.org/abs/2410.10813) and
 [BEAM](https://github.com/mohammadtavakoli78/BEAM) papers.
+
+Mem0's BEAM 1M figure was checked on September 12, 2026. Its current reported
+64.1% replaces the 62% previously quoted here.
 
 ## What we do not yet claim
 
