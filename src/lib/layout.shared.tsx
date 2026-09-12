@@ -32,6 +32,10 @@ export function baseOptions(): BaseLayoutProps {
         external: true,
       },
       {
+        text: "Benchmarks",
+        url: "/#benchmarks",
+      },
+      {
         text: "Install",
         url: "/docs/install",
         active: "nested-url",
@@ -39,11 +43,6 @@ export function baseOptions(): BaseLayoutProps {
       {
         text: "Docs",
         url: "/docs",
-        active: "nested-url",
-      },
-      {
-        text: "Benchmarks",
-        url: "/docs/memory-benchmark",
         active: "nested-url",
       },
       {

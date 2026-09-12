@@ -35,13 +35,12 @@ export function QuickStart() {
     >
       <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
         <div>
-          <p className="km-eyebrow">Start with your agent</p>
           <h2 id="setup-title" className="km-heading">
-            Two commands. A memory that stays.
+            Install Kimetsu
           </h2>
           <p className="mt-4 max-w-md text-fd-muted-foreground">
-            Install the binary, then run setup from your project directory.
-            Choose the agent you already use.
+            Select your agent and run these commands from your project
+            directory. Available for Linux, macOS, and Windows.
           </p>
           <Link href="/docs/install" className="km-text-link mt-4 inline-block">
             All installation options →
@@ -96,7 +95,7 @@ export function QuickStart() {
                 ? feedback.ok
                   ? "Commands copied to clipboard."
                   : "Copy is unavailable. Select and copy the commands above."
-                : "Setup wires this project to your selected agent."}
+                : ""}
             </p>
           </div>
           <noscript>
