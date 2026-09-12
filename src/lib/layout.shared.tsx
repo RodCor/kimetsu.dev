@@ -51,6 +51,14 @@ export function baseOptions(): BaseLayoutProps {
         url: "/projects",
         active: "nested-url",
       },
+      {
+        text: "About",
+        url: "/#about",
+      },
+      {
+        text: "Contact",
+        url: "/#contact",
+      },
     ],
   };
 }

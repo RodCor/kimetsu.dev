@@ -12,6 +12,7 @@ export const gitConfig = {
 
 // External project links.
 export const links = {
+  linkedin: "https://www.linkedin.com/in/rodrigo-cordoba/",
   github: "https://github.com/RodCor/kimetsu",
   siteGithub: "https://github.com/RodCor/kimetsu.dev",
   sidequest: "https://rodcor.github.io/sidequest-commons/",
