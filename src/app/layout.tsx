@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import { Provider } from "@/components/provider";
+import { appName } from "@/lib/shared";
 import "./global.css";
 
 const sans = IBM_Plex_Sans({
@@ -18,7 +19,7 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://kimetsu.dev"),
   title: {
-    default: "Kimetsu — proactive memory for coding agents",
+    default: appName,
     template: "%s | kimetsu.dev",
   },
   description:
@@ -27,8 +28,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/",
-    siteName: "kimetsu.dev",
-    title: "Kimetsu — proactive memory for coding agents",
+    siteName: appName,
+    title: appName,
     description:
       "Carry project decisions, conventions, and fixes across coding sessions. Local memory, one Rust binary, and benchmarks you can inspect.",
   },

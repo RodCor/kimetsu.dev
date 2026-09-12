@@ -1,6 +1,7 @@
 import { ArrowRight, Database, GitBranch, Lock, Terminal } from "lucide-react";
 import Link from "next/link";
 import { links } from "@/lib/shared";
+import { AboutContact } from "./_components/about-contact";
 import { ExploreSection } from "./_components/explore-section";
 import { BrainSharing } from "./_components/home-visuals";
 import { ProjectsSection } from "./_components/projects-section";
@@ -279,6 +280,7 @@ export default function HomePage() {
         </div>
       </section>
       <ProjectsSection />
+      <AboutContact />
       <footer className="mx-auto flex max-w-6xl flex-col justify-between gap-5 px-6 py-10 text-sm sm:flex-row">
         <p className="text-fd-muted-foreground">
           <span className="font-mono font-semibold text-fd-foreground">
@@ -287,6 +289,12 @@ export default function HomePage() {
           · Knowledge that carries forward.
         </p>
         <nav aria-label="Footer" className="flex flex-wrap gap-5">
+          <a href="#about" className="km-text-link">
+            About
+          </a>
+          <a href="#contact" className="km-text-link">
+            Contact
+          </a>
           <a href={links.github} className="km-text-link">
             GitHub
           </a>
