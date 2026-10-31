@@ -15,7 +15,7 @@ across machines) shares one brain per repository, with no local checkout.
 >
 > ```bash
 > npm install -g kimetsu-remote                       # prebuilt server binary
-> cargo install kimetsu-remote --features embeddings  # or from source
+> cargo install kimetsu-remote --features embeddings,tls,stores  # or from source
 > ```
 >
 > (or grab the standalone `kimetsu-remote` archive from a GitHub Release). The
@@ -26,13 +26,14 @@ across machines) shares one brain per repository, with no local checkout.
 
 ```bash
 # On the server (build with --features embeddings for semantic retrieval):
-kimetsu-remote serve --addr 0.0.0.0:8787 --data /srv/kimetsu-brains \
+export KIMETSU_MCP_ENABLE_WRITE_TOOLS=1  # opt in to authenticated memory writes
+kimetsu-remote serve --addr 127.0.0.1:8787 --data /srv/kimetsu-brains \
   --token <secret> --rate-limit 120        # 120 req/min per token (0 = off)
 #   one brain per repo under <data>/<repo-id>/; bearer-auth; plain HTTP. Put a
 #   TLS proxy (nginx/Caddy) in front, or build `--features tls` and pass
 #   --tls-cert/--tls-key for in-process HTTPS. `GET /healthz` and `GET /metrics`
 #   (Prometheus text, aggregate-only) are unauthenticated. Prebuilt
-#   kimetsu-remote binaries are built with embeddings + TLS support.
+#   kimetsu-remote binaries include embeddings, TLS and all storage providers.
 #
 #   Add --org-brain /srv/kimetsu-org for a shared team brain: memories recorded
 #   at `global_user` scope land there and merge into EVERY repo's retrieval
@@ -50,7 +51,63 @@ The repo id is derived from your git remote (`--repo <id>` to override), so the
 endpoint becomes `https://…/mcp/<repo-id>`. By default the host config
 references `${KIMETSU_REMOTE_TOKEN}` (set that env var where your agent runs)
 rather than writing the token to disk. Pass `--token <t>` to embed a literal.
-The remote surfaces the memory/retrieval/curation tools by default.
+The remote supports memory, retrieval and curation tools.
+
+Write tools are disabled until the server process has
+`KIMETSU_MCP_ENABLE_WRITE_TOOLS=1`. Leave it unset or set it to `0` for read-only
+use. This opt-in enables recording/curation while preserving bearer auth and
+repo/global-token scope checks; a successful health check does not verify it.
+
+## Stateless servers and durable storage
+
+Select `--storage sqlite|postgres|redis|dynamodb` to keep durable checkpoints in
+one database while each request uses a private, disposable SQLite retrieval
+projection. Containers and functions can be replaced without losing committed
+brain data. The SQLite store itself needs a persistent local volume; PostgreSQL,
+Redis and DynamoDB can serve independent instances sharing the same namespace.
+
+```bash
+export KIMETSU_REMOTE_STORAGE=postgres
+export KIMETSU_REMOTE_DATABASE_URL='postgresql://USER:PASSWORD@DB/kimetsu?sslmode=require'
+export KIMETSU_REMOTE_STORAGE_NAMESPACE=team
+export KIMETSU_REMOTE_TOKEN='<secret>'
+export KIMETSU_MCP_ENABLE_WRITE_TOOLS=1
+kimetsu-remote serve --addr 127.0.0.1:8787
+```
+
+Use a TLS reverse proxy for this listener. Prefer injecting credentials through
+the environment. `--database-url` accepts a SQLite file path, PostgreSQL URL or
+Redis URL (`rediss://` for TLS). DynamoDB uses
+`KIMETSU_REMOTE_DYNAMODB_TABLE`, the AWS region and the standard SDK credential
+chain. Its table needs string `pk` and `sk` keys; TTL on `expires_at` applies only
+to rate counters. Redis needs persistent storage, AOF with `appendfsync always`
+and `maxmemory-policy noeviction`; assess replication and failover durability
+separately.
+
+`--shared-org-brain` enables org memory shared by every repo in the namespace.
+Use this within one trust group. Shared org writes and conflict resolution
+require a global token. Local-file mode retains `--data` and `--org-brain PATH`;
+checkpoint mode starts empty and does not import those directories automatically.
+
+Changed repo and org checkpoints publish atomically against their previous
+revisions before a success response. Conflicting writers retry from fresh state;
+unavailable storage fails without a local fallback. Rate limits are shared,
+while metrics remain per instance. Whole checkpoints are transferred on requests:
+size memory, temporary disk and timeouts for representative brains. Each
+checkpoint is limited to 64 MiB compressed and 256 MiB decoded. Schema changes
+require an explicit migration or a compatible backup.
+
+The separate `kimetsu-remote-lambda` binary uses the same authenticated router;
+build it with `lambda` and the selected storage feature. Lean builds keep
+serverless cold starts smaller; semantic builds retain the existing retrieval
+engine and add model-loading costs. DynamoDB builds currently need Rust 1.91.1+.
+See the [storage configuration and operational limits](https://github.com/RodCor/kimetsu/blob/main/docs/remote-storage.md)
+and [HTTP container / AWS SAM examples](https://github.com/RodCor/kimetsu/tree/main/deploy/remote-stateless).
+
+The Compose examples pass the write-tools flag through with default `0`; export
+`KIMETSU_MCP_ENABLE_WRITE_TOOLS=1` before starting them to enable writes. The SAM
+example likewise defaults closed: deploy with `EnableWriteTools=1` to set the
+function's write-tools environment flag, or keep `0` for read-only use.
 
 ## Team writes and attribution
 

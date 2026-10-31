@@ -12,6 +12,18 @@ onward the project follows SemVer normally: patch releases are
 bug-fix-only, minor releases are backward-compatible additions, and
 breaking changes require a major bump.
 
+## v2.10.0: Conservative proactive recall and stateless remote storage
+
+- Proactive prompt/tool recall stays silent for greetings, mismatched evidence
+  and uncertain candidate pools. Rejected turns preserve the next relevant warm start.
+- [Kimetsu Remote](/docs/remote) supports durable SQLite, PostgreSQL, Redis and
+  DynamoDB checkpoints with disposable SQLite retrieval projections, shared
+  rate limits and atomic repo/org publication.
+- AWS Lambda and HTTP container examples include explicit memory-write opt-in
+  and provider durability limits. Existing local-file mode and MCP clients remain compatible.
+- Concurrent PostgreSQL startup is coordinated; dependency updates remove the
+  legacy AWS HTTP/TLS path and address the reported security advisories.
+
 ## v2.8.0: Durable memory and scoped answerability
 
 [Released September 9, 2026](https://github.com/RodCor/kimetsu/releases/tag/v2.8.0). The

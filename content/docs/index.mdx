@@ -71,7 +71,9 @@ Other install paths (cargo, prebuilt archives) and host-wiring details are in
 - **Speaks first.** Most memory waits to be asked. Kimetsu is proactive: a
   session-start digest, an episodic resume, and pre-task context mean the
   agent's first turn already knows the repo, your conventions, and what you
-  were doing last time.
+  were doing last time. Proactive prompt and tool recall stays silent for
+  greetings and when candidate memories provide uncertain or mismatched support
+  for the current task.
 - **Learns what helps.** Memories the model cites before solving a problem get
   promoted. Stale advice and silent passengers decay and get pruned.
 - **Answers, not just injects.** `kimetsu ask` composes a grounded, cited
