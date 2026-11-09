@@ -11,8 +11,11 @@ description: "What leaves your machine, what a signature covers, and how the tru
 |------|------------|------------------|
 | Directory sync (`kimetsu brain sync`) | Allowlisted durable events (`memory.accepted`, `memory.proposed`, `memory.rejected`, `memory.invalidated`, `memory.cited`, `memory.superseded`, …) as JSONL batches in a folder you choose | Session resume, run telemetry, embeddings, the SQLite file itself |
 | Signed pack (`kimetsu brain export --sign-key`) | Active memories for the mount you name (`--scope`), scrubbed of credentials/PII, gzip-compressed | `run` and `session` mounts (refused); scrubbed secrets |
-| Live bus (`request_pack`) | One signed pack over QUIC between roster members | Same as packs; the event log is not a bus frame |
 | [Kimetsu Remote](/docs/remote) | HTTP MCP to a server you run | Separate trust domain (bearer tokens, not pack signers) |
+
+> **Coming soon:** a peer bus that dials roster members and moves one signed
+> pack over QUIC (`request_pack`). That path is not in the released `kimetsu`
+> CLI yet. Directory sync and file packs above are what ship today.
 
 Every export runs a security scrub before the bytes leave. `--strict` aborts
 the export if anything was found instead of redacting it.

@@ -6,12 +6,20 @@ description: "Share project memory across machines with signed packs and directo
 # Kimetsu Network
 
 The Kimetsu Network is how two or more machines share the same project brain
-without a central server. Each machine keeps its own SQLite brain. You move
-lessons between them as **signed packs** (a one-shot file) or with
-**directory sync** (a shared folder that keeps event logs in sync). A live
-peer bus can also hand a signed pack over QUIC on a LAN; the everyday path for
-users today is packs and directory sync. This is separate from
-[Kimetsu Remote](/docs/remote), which is an HTTP server for a team brain.
+without a central server. Each machine keeps its own SQLite brain. **Today** you
+move lessons between them as **signed packs** (a one-shot file) or with
+**directory sync** (a shared folder that keeps event logs in sync). Mounts say
+which scope a memory may live in; MCP adapters wire your AI tool to the local
+brain on each machine.
+
+This is separate from [Kimetsu Remote](/docs/remote), which is an HTTP server
+for a team brain.
+
+> **Coming soon: peer-to-peer network.** A live roster / invite / `request_pack`
+> bus over QUIC (iroh) is implemented in the `kimetsu-bus` crate and covered by
+> tests and measurement examples, but the **released `kimetsu` CLI does not
+> link it yet**. There is no `kimetsu network`, `invite`, or `join` command.
+> Use directory sync or signed packs below until that ships.
 
 ## Install
 
@@ -119,6 +127,7 @@ on each machine.
 - **[Connect your tools](/docs/network/connect-your-tools)** — MCP snippets for
   Claude Code, Codex, Cursor, and Grok Bot.
 - **[Security](/docs/network/security)** — what is shared and what is signed.
-- **[Troubleshooting](/docs/network/troubleshooting)** — sync folder issues,
-  firewall / UDP for QUIC, and NAT.
-- Prefer a server instead of peer sync? See **[Kimetsu Remote](/docs/remote)**.
+- **[Troubleshooting](/docs/network/troubleshooting)** — sync folder and pack
+  import issues.
+- Prefer a server instead of a shared folder? See
+  **[Kimetsu Remote](/docs/remote)**.

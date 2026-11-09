@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting"
-description: "Shared-folder sync problems, signed-pack import failures, and firewall / UDP notes for QUIC."
+description: "Shared-folder sync problems and signed-pack import failures."
 ---
 
 # Troubleshooting
@@ -59,28 +59,14 @@ That is the default for `http(s)://` sources. Review with
 `kimetsu brain memory accept`, or pass `--no-quarantine` only when you trust
 the source.
 
-## Firewall, UDP, and QUIC (live bus)
+## Coming soon: peer-to-peer (QUIC)
 
-The peer bus moves a signed pack with **QUIC over UDP** (via iroh). There is
-no everyday `kimetsu invite` / `kimetsu join` CLI yet; LAN and WAN measurements
-use the operator scripts in the Kimetsu repo
-(`scripts/f3-hotpath-two-hosts.sh`). When you do run that path:
-
-1. **Allow UDP** on the port you bind (example: `44144`). TCP alone is not
-   enough.
-2. **Same LAN:** open that UDP port between the two hosts. Relay is off in the
-   measurement harness, so a blocked UDP path fails the dial.
-3. **Home NAT / internet:** forward one external UDP port to the host that
-   binds, and advertise the globally reachable address:port. A Windows
-   Firewall allow rule is separate from the router forward — you often need
-   both. CGNAT (shared WAN addresses such as `100.64.0.0/10`) can make a home
-   forward unreachable from the internet even when STUN succeeds.
-4. **WSL2:** the Linux distro has its own virtual NIC behind Windows NAT. A
-   forward to the Windows LAN IP does not automatically reach a socket bound
-   only inside WSL unless you bridge or mirror networking.
-
-Directory sync and signed pack files do **not** need UDP. Prefer those when
-you only want two machines to share lessons.
+There is no `kimetsu invite`, `join`, `network`, `bus`, or `roster` command in
+the released CLI. The iroh QUIC bus lives in `kimetsu-bus` and is exercised by
+tests and operator examples only. When a user-facing dial path ships, expect
+UDP (not TCP) between peers, and the usual home-NAT / firewall / WSL caveats.
+Until then, use directory sync or signed pack files — they do **not** need
+UDP.
 
 ## Still stuck
 
@@ -90,5 +76,5 @@ kimetsu brain sync --status
 kimetsu plugin status
 ```
 
-For server-based sharing instead of peer sync, see
+For server-based sharing instead of a shared folder, see
 [Kimetsu Remote](/docs/remote).
