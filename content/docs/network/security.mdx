@@ -1,0 +1,71 @@
+---
+title: "Security"
+description: "What leaves your machine, what a signature covers, and how the trust store works."
+---
+
+# Security
+
+## What is shared
+
+| Path | What moves | What stays local |
+|------|------------|------------------|
+| Directory sync (`kimetsu brain sync`) | Allowlisted durable events (`memory.accepted`, `memory.proposed`, `memory.rejected`, `memory.invalidated`, `memory.cited`, `memory.superseded`, …) as JSONL batches in a folder you choose | Session resume, run telemetry, embeddings, the SQLite file itself |
+| Signed pack (`kimetsu brain export --sign-key`) | Active memories for the mount you name (`--scope`), scrubbed of credentials/PII, gzip-compressed | `run` and `session` mounts (refused); scrubbed secrets |
+| Live bus (`request_pack`) | One signed pack over QUIC between roster members | Same as packs; the event log is not a bus frame |
+| [Kimetsu Remote](/docs/remote) | HTTP MCP to a server you run | Separate trust domain (bearer tokens, not pack signers) |
+
+Every export runs a security scrub before the bytes leave. `--strict` aborts
+the export if anything was found instead of redacting it.
+
+## What is signed
+
+`kimetsu brain export --scope <mount> --sign-key signer.json` writes
+**`kimetsu_pack` 2**:
+
+- Scrub runs first.
+- Body is canonical JSON (`kimetsu-canon-json/1`).
+- Digest is BLAKE3-256 of that body.
+- Signature is Ed25519 over that digest.
+- The pack lists the mounts it may enter. A scope outside that list is
+  rejected and does not touch the database.
+
+`signer.json` is either 64 hex chars (32-byte secret) or:
+
+```json
+{ "kimetsu_signer": 1, "secret_key": "<64-hex>" }
+```
+
+Keep the secret private. The pack's `signer` field is the public key.
+
+## Trust store
+
+On import, a signed pack is checked against
+`~/.kimetsu/trust.json` (or `$KIMETSU_TRUST_STORE`, or `--trust-store`):
+
+```json
+{
+  "kimetsu_trust": 1,
+  "signers": [
+    {
+      "public_key": "<64-hex public key from the pack's signer field>",
+      "mounts": ["repo"]
+    }
+  ]
+}
+```
+
+- A valid signature from a listed key for that mount **merges**.
+- A valid signature from an unknown key is **quarantined** (review with
+  `kimetsu brain memory accept` before it can affect retrieval).
+- A bad signature or a scope mismatch is **rejected** (no SQL write).
+
+An empty trust store quarantines every signed pack. Unsigned v1 packs skip
+the signature path; use them only for files you already trust, or pass
+`--quarantine`.
+
+## Mounts in one line
+
+A **mount** is where a memory is allowed to live (`repo`, `user`, `org`,
+`skill`, `session`, `run`). Sharing only moves the mounts the pack or sync
+allowlist names. Local MCP write for agents is `repo` only (while write tools
+are on). Directory sync and packs never carry `run` / `session`.

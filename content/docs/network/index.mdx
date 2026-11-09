@@ -1,0 +1,124 @@
+---
+title: "Kimetsu Network"
+description: "Share project memory across machines with signed packs and directory sync. No server required."
+---
+
+# Kimetsu Network
+
+The Kimetsu Network is how two or more machines share the same project brain
+without a central server. Each machine keeps its own SQLite brain. You move
+lessons between them as **signed packs** (a one-shot file) or with
+**directory sync** (a shared folder that keeps event logs in sync). A live
+peer bus can also hand a signed pack over QUIC on a LAN; the everyday path for
+users today is packs and directory sync. This is separate from
+[Kimetsu Remote](/docs/remote), which is an HTTP server for a team brain.
+
+## Install
+
+Install the `kimetsu` binary on every machine that will share. Full details are
+in **[Install & host wiring](/docs/install)**. Short version:
+
+```bash
+# npm (no Rust required) — lean prebuilt for your OS
+npm install -g kimetsu-ai
+
+# or cargo
+cargo install kimetsu-cli
+
+# or a GitHub Release archive for Linux / macOS / Windows
+# https://github.com/RodCor/kimetsu/releases
+```
+
+Check it:
+
+```bash
+kimetsu --version
+kimetsu doctor
+```
+
+## Quickstart: connect two machines
+
+The simplest continuous path is **directory sync**: both machines write to the
+same shared folder (Dropbox, Syncthing, a NAS, or a USB stick). Five steps.
+
+**1. Install Kimetsu on both machines** (see above).
+
+**2. Init the same project on each machine** (run inside the repo):
+
+```bash
+cd /path/to/your/project
+kimetsu init
+```
+
+**3. Point both brains at one shared folder**, and give each machine a unique
+id:
+
+```bash
+# on machine A
+kimetsu config set sync.dir /path/to/shared/kimetsu-sync
+kimetsu config set sync.machine_id laptop
+
+# on machine B
+kimetsu config set sync.dir /path/to/shared/kimetsu-sync
+kimetsu config set sync.machine_id desktop
+```
+
+`sync.dir` must be the same folder both can see. `sync.machine_id` must differ.
+
+**4. Record a lesson on machine A, then sync both sides:**
+
+```bash
+# on A
+kimetsu brain memory add "prefer sqlx over diesel here" --scope repo --kind convention
+kimetsu brain sync
+
+# on B (after the shared folder has A's batch)
+kimetsu brain sync
+kimetsu brain memory list
+```
+
+**5. Wire your AI tool** so it reads the shared brain (one command):
+
+```bash
+kimetsu plugin install claude-code   # or: codex | cursor | grok-bot | pi | openclaw
+```
+
+That is the whole loop. Run `kimetsu brain sync` whenever you want a push/pull,
+or leave `[sync] auto = true` (the default once `dir` is set) so session end
+syncs for you. Check state with `kimetsu brain sync --status`.
+
+### One-shot alternative: hand someone a signed pack
+
+When you only need to copy lessons once (onboarding, a USB stick, email):
+
+```bash
+# on A — make a signer key once (keep this file private)
+python3 -c 'import secrets,json; print(json.dumps({"kimetsu_signer":1,"secret_key":secrets.token_hex(32)}))' > signer.json
+
+kimetsu brain export team.json.gz --scope repo --name team --version 1.0.0 --sign-key signer.json
+
+# on B — trust A's public key, then import
+# (the pack's "signer" field is the public key; put it in ~/.kimetsu/trust.json)
+kimetsu brain import team.json.gz --scope-override repo
+```
+
+Signed packs are `kimetsu_pack` 2. See [Security](/docs/network/security) for
+the trust store shape. Unsigned v1 packs still work for local files you trust.
+
+## What stays local
+
+Directory sync copies durable memory events only (`memory.accepted`,
+`memory.proposed`, `memory.rejected`, `memory.invalidated`, `memory.cited`,
+`memory.superseded`, and a few related ones). It does **not** copy session
+resume text, run telemetry, or the raw SQLite file. Signed packs never include
+`run` or `session` mounts. Your agent still talks to the brain over local MCP
+on each machine.
+
+## Next
+
+- **[Connect your tools](/docs/network/connect-your-tools)** — MCP snippets for
+  Claude Code, Codex, Cursor, and Grok Bot.
+- **[Security](/docs/network/security)** — what is shared and what is signed.
+- **[Troubleshooting](/docs/network/troubleshooting)** — sync folder issues,
+  firewall / UDP for QUIC, and NAT.
+- Prefer a server instead of peer sync? See **[Kimetsu Remote](/docs/remote)**.

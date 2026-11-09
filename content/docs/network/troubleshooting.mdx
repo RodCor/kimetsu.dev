@@ -1,0 +1,94 @@
+---
+title: "Troubleshooting"
+description: "Shared-folder sync problems, signed-pack import failures, and firewall / UDP notes for QUIC."
+---
+
+# Troubleshooting
+
+## Directory sync
+
+**`[sync] dir` is not configured`**
+
+```bash
+kimetsu config set sync.dir /path/to/shared/kimetsu-sync
+kimetsu config set sync.machine_id my-laptop
+kimetsu brain sync --status
+```
+
+Both machines must use the **same** `sync.dir` and **different**
+`machine_id` values.
+
+**Peers show up empty / nothing pulls**
+
+1. Confirm the shared folder actually contains `<dir>/<other-machine-id>/`
+   batch files (Dropbox/Syncthing lag is the usual cause).
+2. Run `kimetsu brain sync` on the writer first, then on the reader.
+3. Check `kimetsu brain sync --status` for cursors and `pending_pull`.
+
+**Conflicts after concurrent edits**
+
+```bash
+kimetsu brain memory conflicts
+```
+
+Directory sync is event-log replication. Concurrent supersedes can leave a
+conflict for you to review; they are not silently dropped.
+
+**Sync vs pack**
+
+`kimetsu brain sync import` refuses a `kimetsu_pack` file. Packs go through
+`kimetsu brain import`. Sync batches go through `kimetsu brain sync`.
+
+## Signed packs
+
+**Import says the signer is not trusted**
+
+Add the pack's `signer` public key to `~/.kimetsu/trust.json` under the mount
+you are importing into, or pass `--trust-store`. Without that, a valid
+signature is quarantined on purpose.
+
+**`--sign-key` errors**
+
+- Requires `--scope`.
+- Does not take `--kind`.
+- Key file must be 64 hex chars or `{"kimetsu_signer":1,"secret_key":"…"}`.
+
+**URL imports land in quarantine**
+
+That is the default for `http(s)://` sources. Review with
+`kimetsu brain memory accept`, or pass `--no-quarantine` only when you trust
+the source.
+
+## Firewall, UDP, and QUIC (live bus)
+
+The peer bus moves a signed pack with **QUIC over UDP** (via iroh). There is
+no everyday `kimetsu invite` / `kimetsu join` CLI yet; LAN and WAN measurements
+use the operator scripts in the Kimetsu repo
+(`scripts/f3-hotpath-two-hosts.sh`). When you do run that path:
+
+1. **Allow UDP** on the port you bind (example: `44144`). TCP alone is not
+   enough.
+2. **Same LAN:** open that UDP port between the two hosts. Relay is off in the
+   measurement harness, so a blocked UDP path fails the dial.
+3. **Home NAT / internet:** forward one external UDP port to the host that
+   binds, and advertise the globally reachable address:port. A Windows
+   Firewall allow rule is separate from the router forward — you often need
+   both. CGNAT (shared WAN addresses such as `100.64.0.0/10`) can make a home
+   forward unreachable from the internet even when STUN succeeds.
+4. **WSL2:** the Linux distro has its own virtual NIC behind Windows NAT. A
+   forward to the Windows LAN IP does not automatically reach a socket bound
+   only inside WSL unless you bridge or mirror networking.
+
+Directory sync and signed pack files do **not** need UDP. Prefer those when
+you only want two machines to share lessons.
+
+## Still stuck
+
+```bash
+kimetsu doctor
+kimetsu brain sync --status
+kimetsu plugin status
+```
+
+For server-based sharing instead of peer sync, see
+[Kimetsu Remote](/docs/remote).
