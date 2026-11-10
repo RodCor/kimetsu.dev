@@ -1,0 +1,344 @@
+/*
+ * Storyboard motion tokens. Two durations and one ease-out curve.
+ * Exits use the shared CSS ease-in keyword (shorter, no overshoot).
+ * Only transform and opacity transition.
+ */
+.root {
+  --nh-dur-in: 240ms;
+  --nh-dur-out: 180ms;
+  --nh-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --nh-line: color-mix(
+    in srgb,
+    var(--color-fd-foreground) 55%,
+    var(--color-fd-card)
+  );
+  --dot: 10px;
+  --nudge: 5px;
+}
+
+.stage {
+  position: relative;
+  height: 29rem;
+  overflow: hidden;
+}
+
+.track {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+.spine,
+.stations,
+.mover {
+  position: absolute;
+  pointer-events: none;
+}
+
+.spine {
+  z-index: 0;
+  left: calc(var(--dot) / 2);
+  top: calc(var(--nudge) + var(--dot) / 2);
+  width: 1px;
+  height: 66.666%;
+  background: var(--nh-line);
+}
+
+.stations {
+  z-index: 1;
+  inset: 0;
+}
+
+.stations span {
+  position: absolute;
+  left: 0;
+  width: var(--dot);
+  height: var(--dot);
+  box-sizing: border-box;
+  border: 1px solid var(--nh-line);
+  border-radius: 999px;
+  background: var(--color-fd-card);
+}
+
+.stations span:nth-child(1) {
+  top: var(--nudge);
+}
+
+.stations span:nth-child(2) {
+  top: calc(33.333% + var(--nudge));
+}
+
+.stations span:nth-child(3) {
+  top: calc(66.666% + var(--nudge));
+}
+
+.mover {
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: var(--dot);
+  height: 100%;
+  transform: translate3d(0, var(--nudge), 0);
+  transition: transform var(--nh-dur-in) var(--nh-ease-out);
+}
+
+.dot {
+  display: block;
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 999px;
+  background: var(--color-fd-primary);
+}
+
+.root[data-step="2"] .mover {
+  transform: translate3d(0, calc(33.333% + var(--nudge)), 0);
+}
+
+.root[data-step="3"] .mover,
+.root[data-step="4"] .mover {
+  transform: translate3d(0, calc(66.666% + var(--nudge)), 0);
+}
+
+.node {
+  position: relative;
+  min-width: 0;
+  padding-left: 1.75rem;
+}
+
+.kicker {
+  margin: 0;
+  color: var(--color-fd-foreground);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.35;
+}
+
+.meta {
+  margin: 0.15rem 0 0;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.brainBar {
+  display: block;
+  width: 2.25rem;
+  height: 2px;
+  margin-top: 0.4rem;
+  background: var(--color-fd-primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--nh-dur-out) ease-in;
+}
+
+.root[data-step="1"] .brainBar,
+.root[data-step="2"] .brainBar,
+.root[data-step="3"] .brainBar,
+.root[data-step="4"] .brainBar {
+  transform: scaleX(1);
+  transition: transform var(--nh-dur-in) var(--nh-ease-out);
+}
+
+.status {
+  display: grid;
+  grid-template-rows: 1.25rem 1.25rem 1.25rem;
+  margin-top: 0.55rem;
+}
+
+.chip {
+  grid-column: 1;
+  margin: 0;
+  color: var(--color-fd-primary);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  opacity: 0;
+  transition: opacity var(--nh-dur-out) ease-in;
+}
+
+.lesson {
+  grid-row: 1;
+}
+
+.packNet,
+.packB {
+  grid-row: 1;
+}
+
+.seal,
+.request,
+.answer {
+  grid-row: 2;
+}
+
+.cite {
+  grid-row: 3;
+}
+
+.root[data-step="0"] .lesson {
+  opacity: 1;
+  transition: opacity var(--nh-dur-in) var(--nh-ease-out);
+}
+
+.root[data-step="2"] .packNet,
+.root[data-step="2"] .seal {
+  opacity: 1;
+  transition: opacity var(--nh-dur-in) var(--nh-ease-out) var(--nh-dur-in);
+}
+
+.root[data-step="3"] .seal,
+.root[data-step="4"] .seal {
+  opacity: 1;
+  transition: opacity var(--nh-dur-in) var(--nh-ease-out);
+}
+
+.root[data-step="3"] .packB,
+.root[data-step="4"] .packB,
+.root[data-step="3"] .request {
+  opacity: 1;
+  transition: opacity var(--nh-dur-in) var(--nh-ease-out) var(--nh-dur-in);
+}
+
+.root[data-step="4"] .answer,
+.root[data-step="4"] .cite {
+  opacity: 1;
+  transition: opacity var(--nh-dur-in) var(--nh-ease-out);
+}
+
+.root[data-instant="true"] .mover,
+.root[data-instant="true"] .chip,
+.root[data-instant="true"] .brainBar {
+  transition: none;
+}
+
+.caption {
+  min-height: 8.75rem;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.playback,
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  min-inline-size: 0;
+}
+
+.step {
+  display: inline-flex;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.6rem;
+  background: var(--color-fd-background);
+  color: var(--color-fd-foreground);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.step[aria-current="step"] {
+  border-color: var(--color-fd-primary);
+  background: color-mix(
+    in srgb,
+    var(--color-fd-primary) 12%,
+    var(--color-fd-background)
+  );
+  color: var(--color-fd-primary);
+}
+
+.note {
+  margin: 0.75rem 0 0;
+  color: var(--color-fd-muted-foreground);
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .stage {
+    height: 12rem;
+  }
+
+  .track {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  .node {
+    padding-top: 0.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 2.75rem;
+    padding-left: 0;
+  }
+
+  .spine {
+    top: auto;
+    bottom: calc(1.15rem + var(--dot) / 2);
+    left: calc(var(--dot) / 2);
+    width: 66.666%;
+    height: 1px;
+  }
+
+  .stations span:nth-child(1),
+  .stations span:nth-child(2),
+  .stations span:nth-child(3) {
+    top: auto;
+    bottom: 1.15rem;
+  }
+
+  .stations span:nth-child(1) {
+    left: 0;
+  }
+
+  .stations span:nth-child(2) {
+    left: 33.333%;
+  }
+
+  .stations span:nth-child(3) {
+    left: 66.666%;
+  }
+
+  .mover {
+    top: auto;
+    bottom: 1.15rem;
+    width: 100%;
+    height: var(--dot);
+    transform: translate3d(0, 0, 0);
+  }
+
+  .root[data-step="2"] .mover {
+    transform: translate3d(33.333%, 0, 0);
+  }
+
+  .root[data-step="3"] .mover,
+  .root[data-step="4"] .mover {
+    transform: translate3d(66.666%, 0, 0);
+  }
+
+  .caption {
+    min-height: 4.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mover,
+  .chip,
+  .brainBar {
+    transition: none;
+  }
+}
