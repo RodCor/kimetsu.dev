@@ -1,0 +1,135 @@
+---
+title: "Troubleshooting"
+description: "Peer-to-peer reachability, builds, shared-folder sync, and signed-pack import failures."
+---
+
+# Troubleshooting
+
+## Peer-to-peer
+
+**`kimetsu network` is an unknown command**
+
+You have v2.10.0 or earlier. Those packages do not include the peer
+commands. Use [directory sync](/docs/network#alternative-directory-sync)
+or [a signed pack file](/docs/network#alternative-a-signed-pack-file),
+or install a network-enabled build as described on the
+[Kimetsu Network](/docs/network) page (Rust 1.91+,
+`--features network`).
+
+**Status says the peer network is not included in this build**
+
+This binary was compiled without the `network` feature. Release and
+npm prebuilts (after the next release) include it. A source install
+needs `cargo install … kimetsu-cli --features network`. Nothing is
+listening.
+
+**`not on a network` / `already on a network`**
+
+Join first with `kimetsu network join <code>`. If you are already
+on a network and need to join a different one, run
+`kimetsu network leave` first.
+
+**Only the founder can invite**
+
+`kimetsu network invite` on a machine that joined with a code (a
+member, not the founder) is refused. Ask the person who created the
+network to issue a new code.
+
+**`request` cannot reach the peer**
+
+1. Leave `kimetsu network share` running on the other machine until
+   the request finishes.
+2. Pass the `peer:` line that `share` printed:
+   `kimetsu network request --peer <endpoint-id>@host:port`.
+3. The two machines must be able to reach that address. Local
+   discovery (mDNS) is on by default; `--no-mdns` turns it off and
+   then `--peer` is required.
+4. This is UDP (QUIC), not TCP. A firewall that allows only TCP will
+   block it. Relay is off, and router port mapping is off unless you
+   pass `--map-ports`. Crossing a home NAT has not been tested on
+   two physical machines.
+
+**Share refuses: the security scrub found something**
+
+The peer path will not send a pack if the scrubber finds credentials
+or PII (for example emails, phone numbers, or card numbers). Fix or
+remove those memories, then share again. This is on purpose.
+
+**Join is refused because the network shares more than the repo**
+
+The peer path only allows the `repo` mount. A roster that also
+shares `user` (or any other mount) is rejected and nothing is saved.
+
+**Join code is not valid**
+
+Copy the whole line, including the `knet1.` prefix. The code is a
+bearer credential — if it was truncated or re-typed, it will not
+decode.
+
+## Directory sync
+
+**`[sync] dir` is not configured`**
+
+```bash
+kimetsu config set sync.dir /path/to/shared/kimetsu-sync
+kimetsu config set sync.machine_id my-laptop
+kimetsu brain sync --status
+```
+
+Both machines must use the **same** `sync.dir` and **different**
+`machine_id` values.
+
+**Peers show up empty / nothing pulls**
+
+1. Confirm the shared folder actually contains `<dir>/<other-machine-id>/`
+   batch files (Dropbox/Syncthing lag is the usual cause).
+2. Run `kimetsu brain sync` on the writer first, then on the reader.
+3. Check `kimetsu brain sync --status` for cursors and `pending_pull`.
+
+**Conflicts after concurrent edits**
+
+```bash
+kimetsu brain memory conflicts
+```
+
+Directory sync is event-log replication. Concurrent supersedes can
+leave a conflict for you to review; they are not silently dropped.
+
+**Sync vs pack**
+
+`kimetsu brain sync import` refuses a `kimetsu_pack` file. Packs go
+through `kimetsu brain import` (or `kimetsu network request` for the
+peer path). Sync batches go through `kimetsu brain sync`.
+
+## Signed packs
+
+**Import says the signer is not trusted**
+
+Add the pack's `signer` public key to `~/.kimetsu/trust.json` under
+the mount you are importing into, or pass `--trust-store`. Without
+that, a valid signature is quarantined on purpose. Peer-to-peer uses
+a separate store under `~/.kimetsu/network/trust.json`.
+
+**`--sign-key` errors**
+
+- Requires `--scope`.
+- Does not take `--kind`.
+- Key file must be 64 hex chars or `{"kimetsu_signer":1,"secret_key":"…"}`.
+
+**URL imports land in quarantine**
+
+That is the default for `http(s)://` sources. Review with
+`kimetsu brain memory accept`, or pass `--no-quarantine` only when
+you trust the source.
+
+## Still stuck
+
+```bash
+kimetsu doctor
+kimetsu network status
+kimetsu brain sync --status
+kimetsu plugin status
+```
+
+For server-based sharing instead of a peer or a shared folder, see
+[Kimetsu Remote](/docs/remote).

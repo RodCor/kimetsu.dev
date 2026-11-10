@@ -1,0 +1,125 @@
+---
+title: "Connect your tools"
+description: "Wire Kimetsu into Claude Code, Codex, Cursor, or Grok Bot over MCP so each machine uses the shared brain."
+---
+
+# Connect your tools
+
+Each machine runs its own local MCP server against its local brain.
+After a [peer request, directory sync, or a pack import](/docs/network)
+has shared the lessons, your host agent reads them through MCP. The
+installer writes the host config for you.
+
+```bash
+cd /path/to/your/project
+kimetsu plugin install <host>   # claude-code | codex | cursor | grok-bot | pi | openclaw
+```
+
+Restart the host so it picks up the server. `kimetsu plugin status`
+shows what is wired. `pi` and `openclaw` need a binary built with
+those features (or a prebuilt / npm install, which already includes
+them).
+
+## Claude Code
+
+```bash
+kimetsu plugin install claude-code
+```
+
+Writes `.mcp.json` (and Claude settings/hooks). Equivalent MCP entry:
+
+```json
+{
+  "mcpServers": {
+    "kimetsu": {
+      "type": "stdio",
+      "command": "kimetsu",
+      "args": ["mcp", "serve", "--workspace", "."]
+    }
+  }
+}
+```
+
+## Codex
+
+```bash
+kimetsu plugin install codex
+```
+
+Writes `.codex/config.toml` plus hooks. Equivalent MCP entry:
+
+```toml
+[mcp_servers.kimetsu]
+command = "kimetsu"
+args = ["mcp", "serve", "--workspace", "."]
+```
+
+## Cursor
+
+```bash
+kimetsu plugin install cursor
+```
+
+Writes `.cursor/mcp.json` and a guidance rule. Equivalent MCP entry:
+
+```json
+{
+  "mcpServers": {
+    "kimetsu": {
+      "type": "stdio",
+      "command": "kimetsu",
+      "args": ["mcp", "serve", "--workspace", "."]
+    }
+  }
+}
+```
+
+Cursor has no prompt-submit hook, so the model must call
+`kimetsu_brain_context` itself. The installer adds an always-on rule
+that asks it to.
+
+## Grok Bot
+
+```bash
+kimetsu plugin install grok-bot
+```
+
+Grok Bot has no settings file for a custom MCP server. The installer
+writes `.kimetsu/hosts/grok-bot.md`. Ask the Bot to add this local
+command on its computer:
+
+```text
+kimetsu mcp serve --workspace .
+```
+
+For a remote HTTP brain instead, run
+`kimetsu plugin install grok-bot --remote https://kimetsu.example.com:8787`
+and paste the URL from the snippet (see [Kimetsu Remote](/docs/remote)).
+
+## Manual stdio (any MCP host)
+
+```bash
+kimetsu mcp serve --workspace .
+```
+
+Stdio grants for this session: read `repo`, read `user`, and write
+`repo` only while write tools are enabled. `kimetsu_brain_record`
+stores on `repo`. After a retrieved memory helps, call
+`kimetsu_brain_cite` with `exposure_id` and `memory_id` from context.
+`outcome` is `helped`, `noop`, or `harmed`.
+
+## Network MCP tools
+
+Network-enabled builds also register two tools. They are listed
+only when the binary was compiled with the `network` feature.
+
+- **`kimetsu_network_status`** — whether this machine has joined a
+  peer network. It does not listen, discover, or contact a relay.
+- **`kimetsu_network_request`** — fetch repo memories a peer is
+  sharing. You must have joined first, and you must pass `peer`
+  (`endpoint-id@host:port`) or `discover: true`. Signatures are
+  checked before any write. Router port mapping stays off unless
+  `map_ports` is true.
+
+Sharing stays a terminal command: `kimetsu network share`. See
+[Reference](/docs/network/reference) for arguments.

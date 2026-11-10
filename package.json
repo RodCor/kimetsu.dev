@@ -7,7 +7,7 @@
     "postbuild": "node scripts/check-static-output.mjs",
     "dev": "next dev",
     "start": "serve out",
-    "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
+    "types:check": "fumadocs-mdx && next typegen && fumadocs-mdx && tsc --noEmit",
     "test": "node --test",
     "monitor:discovery": "node scripts/check-agent-discovery.mjs",
     "check": "npm run lint && npm run types:check && npm test && npm run build",

@@ -1,0 +1,143 @@
+---
+title: "Reference"
+description: "kimetsu network commands, flags, and the two MCP tools."
+---
+
+# Reference
+
+All of these commands exist on `main` after
+[PR #70](https://github.com/RodCor/kimetsu/pull/70). They are not in
+the v2.10.0 release. A binary without the `network` cargo feature
+still accepts `kimetsu network status` and reports that the network
+is not compiled in; the other subcommands error. Nothing is
+listening in that case.
+
+Network state defaults to `~/.kimetsu/network`. Override it with
+`--state-dir` or `$KIMETSU_NETWORK_DIR`.
+
+## `kimetsu network invite`
+
+Create a one-person join code. Saves membership if this is a new
+network. Does not listen.
+
+```bash
+kimetsu network invite [--name <name>] [--json] [--state-dir <dir>]
+```
+
+| Flag | Default | Meaning |
+|------|---------|---------|
+| `--name` | `friends` | Name for a **new** network. Letters, numbers, `-`, and `_`. 1–64 characters. Ignored when you are already the founder and are issuing another code |
+| `--json` | off | Print `code`, `group`, and `listening: false` |
+| `--state-dir` | `~/.kimetsu/network` | Where network keys live |
+
+Only the founder (the person who created the network) can invite.
+The printed code starts with `knet1.` and does not include the admin
+key. Treat it as a bearer credential.
+
+## `kimetsu network join`
+
+Join with a code from `invite`. Saves membership. Does not listen.
+
+```bash
+kimetsu network join <code> [--json] [--state-dir <dir>]
+```
+
+Refuse to join if this machine is already on a network (run
+`leave` first), if the code is invalid, if it shares more than the
+`repo` mount, or if it comes from a newer kimetsu (`v` is not `1`).
+
+## `kimetsu network status`
+
+Show whether this machine is on a network. Does not listen,
+discover, or contact a relay.
+
+```bash
+kimetsu network status [--json] [--state-dir <dir>]
+```
+
+`--json` prints `compiled`, `joined`, `listening` (always `false`
+for this command), and when joined: `group`, `role`, `generation`,
+`endpoint_id`.
+
+## `kimetsu network leave`
+
+Forget the network on this machine. Does not listen. Removes local
+network state files. It does not tell other machines that you left.
+
+```bash
+kimetsu network leave [--state-dir <dir>]
+```
+
+## `kimetsu network share`
+
+Export this repo's memories as a signed pack and wait for a peer to
+fetch them. Listens until you press Ctrl-C. Only the `repo` mount is
+shared. Refuses to start if the security scrub is not clean.
+
+```bash
+kimetsu network share [--workspace <dir>] [--bind <ip:port>] [--no-mdns] [--map-ports] [--ready-file <file>] [--state-dir <dir>]
+```
+
+| Flag | Default | Meaning |
+|------|---------|---------|
+| `--workspace` | current directory | Repo whose brain to share |
+| `--bind` | (unset) | IPv4 socket to bind, for example `127.0.0.1:0` |
+| `--no-mdns` | off | Do not announce this machine on the local network |
+| `--map-ports` | off | Ask the router to open a UDP port (UPnP / NAT-PMP). Off by default |
+| `--ready-file` | (unset) | After the socket is up, write `{endpoint_id, dial, peer, digest, listening}` here |
+| `--state-dir` | `~/.kimetsu/network` | Where network keys live |
+
+`share` prints a `peer: <endpoint-id>@host:port` line for the other
+machine to pass to `request`. Relay is always disabled.
+
+## `kimetsu network request`
+
+Fetch repo memories a peer is sharing right now. Verifies the
+signature before any write. An unknown signer is quarantined.
+Listens only while this command runs.
+
+```bash
+kimetsu network request [--peer <endpoint-id>@host:port] [--workspace <dir>] [--bind <ip:port>] [--no-mdns] [--map-ports] [--json] [--state-dir <dir>]
+```
+
+| Flag | Default | Meaning |
+|------|---------|---------|
+| `--peer` | (unset) | Sharer's `endpoint-id@host:port` line. Without it, local discovery of roster members is used |
+| `--workspace` | current directory | Repo that receives the pack |
+| `--bind` | (unset) | IPv4 socket to bind, for example `127.0.0.1:0` |
+| `--no-mdns` | off | Do not look for peers on the local network. Then `--peer` is required |
+| `--map-ports` | off | Ask the router to open a UDP port (UPnP / NAT-PMP) |
+| `--json` | off | Print import counts (`verified`, `digest`, `imported`, `deduped`, `quarantined`, `superseded`, `listening: false`) |
+| `--state-dir` | `~/.kimetsu/network` | Where network keys live |
+
+You must have joined first. This machine has to be on the same
+network as the sharer.
+
+## MCP tools
+
+These tools are registered only in network-enabled builds, when you
+run `kimetsu mcp serve`.
+
+### `kimetsu_network_status`
+
+Whether this machine has joined a Kimetsu peer network. Does not
+listen, discover peers, or contact a relay. No arguments. Sharing
+stays a terminal command: `kimetsu network share`.
+
+### `kimetsu_network_request`
+
+Fetch repo memories a peer is sharing. Verifies the pack signature
+before any write. Refuses packs that are not scoped to `repo`. Does
+nothing and opens no socket when this machine has not joined.
+
+| Argument | Default | Meaning |
+|----------|---------|---------|
+| `peer` | (unset) | `endpoint-id@host:port` from `kimetsu network share` |
+| `discover` | `false` | Look for roster peers on the local network |
+| `map_ports` | `false` | Ask the router to open a UDP port |
+
+You must pass `peer` or `discover: true`. Otherwise the tool
+refuses and contacts nothing.
+
+See [Connect your tools](/docs/network/connect-your-tools) for host
+setup.

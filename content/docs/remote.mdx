@@ -170,3 +170,14 @@ the URL). The repo-id keys must match the ids clients connect with.
 
 For the architecture (auth, rate limiting, org brain, the tool allowlist, the
 write-tools gate), see §7a in [HOW-KIMETSU-WORKS.md](/docs/how-kimetsu-works).
+
+
+## Peer sharing instead of a server
+
+If you want machines to share lessons **without** running
+`kimetsu-remote`, use `kimetsu network` (invite / join / share /
+request), signed packs, or directory sync on the
+**[Kimetsu Network](/docs/network)** page. The peer commands are on
+`main` and will ship in the next prebuilt/npm release; they are not
+in v2.10.0. Remote stays the HTTP checkpoint path; it does not dial
+the peer network.
