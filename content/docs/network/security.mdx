@@ -1,49 +1,98 @@
 ---
 title: "Security"
-description: "What leaves your machine, what a signature covers, and how the trust store works."
+description: "What leaves your machine, when Kimetsu listens, what a signature covers, and how trust works."
 ---
 
 # Security
+
+## When Kimetsu listens
+
+`kimetsu network invite`, `join`, `status`, and `leave` only touch
+files. They do not open a socket, announce on the local network, or
+contact a relay.
+
+`kimetsu network share` and `kimetsu network request` are what bind,
+and only while they run. `share` listens until you press Ctrl-C.
+`request` binds while it fetches, then stops. After that, nothing is
+listening.
+
+Defaults for those two commands:
+
+- **Relay is off.** There is no relay flag. Kimetsu does not use a
+  relay.
+- **Router port mapping is off** unless you pass `--map-ports` (UPnP /
+  NAT-PMP). This is not automatic NAT traversal.
+- **Local discovery (mDNS) is on** unless you pass `--no-mdns`. The
+  announcement is an endpoint id, not memory text.
+- `--bind` is an IPv4 socket if you need to pick one
+  (`127.0.0.1:0` for loopback).
+
+Network keys live in `~/.kimetsu/network` (or `--state-dir`, or
+`$KIMETSU_NETWORK_DIR`).
+
+## Join codes
+
+A join code from `kimetsu network invite` is a **bearer credential
+for one roster slot**. Anyone who has the code can join and exchange
+repo memories with that network. The code starts with `knet1.` and
+does **not** include the admin key. Treat it like a password. Only
+the person who created the network can issue another code.
+
+`kimetsu network leave` forgets the network on that machine.
 
 ## What is shared
 
 | Path | What moves | What stays local |
 |------|------------|------------------|
+| Peer-to-peer (`kimetsu network share` / `request`) | One signed, scrubbed pack of **repo** memories, over a direct connection | Session resume, run telemetry, embeddings, the SQLite file; `user` / `org` / `session` / `run` mounts (the network will not join a roster that shares more than repo) |
 | Directory sync (`kimetsu brain sync`) | Allowlisted durable events (`memory.accepted`, `memory.proposed`, `memory.rejected`, `memory.invalidated`, `memory.cited`, `memory.superseded`, …) as JSONL batches in a folder you choose | Session resume, run telemetry, embeddings, the SQLite file itself |
-| Signed pack (`kimetsu brain export --sign-key`) | Active memories for the mount you name (`--scope`), scrubbed of credentials/PII, gzip-compressed | `run` and `session` mounts (refused); scrubbed secrets |
+| Signed pack file (`kimetsu brain export --sign-key`) | Active memories for the mount you name (`--scope`), scrubbed of credentials/PII, gzip-compressed | `run` and `session` mounts (refused); scrubbed secrets |
 | [Kimetsu Remote](/docs/remote) | HTTP MCP to a server you run | Separate trust domain (bearer tokens, not pack signers) |
 
-> **Coming soon:** a peer bus that dials roster members and moves one signed
-> pack over QUIC (`request_pack`). That path is not in the released `kimetsu`
-> CLI yet. Directory sync and file packs above are what ship today.
-
-Every export runs a security scrub before the bytes leave. `--strict` aborts
-the export if anything was found instead of redacting it.
+The peer path **refuses to share** if the security scrub finds
+anything (for example emails, phone numbers, or card numbers). Fix
+those memories, then try again. File export also scrubs first;
+`--strict` aborts that export if anything was found instead of
+redacting it.
 
 ## What is signed
 
-`kimetsu brain export --scope <mount> --sign-key signer.json` writes
-**`kimetsu_pack` 2**:
+A shared pack is **`kimetsu_pack` 2**:
 
 - Scrub runs first.
 - Body is canonical JSON (`kimetsu-canon-json/1`).
 - Digest is BLAKE3-256 of that body.
 - Signature is Ed25519 over that digest.
 - The pack lists the mounts it may enter. A scope outside that list is
-  rejected and does not touch the database.
+  rejected and does not touch the database. The peer path only offers
+  `repo`.
 
-`signer.json` is either 64 hex chars (32-byte secret) or:
+For a pack file you make yourself,
+`kimetsu brain export --scope <mount> --sign-key signer.json` uses
+the same format. `signer.json` is either 64 hex chars (32-byte
+secret) or:
 
 ```json
 { "kimetsu_signer": 1, "secret_key": "<64-hex>" }
 ```
 
 Keep the secret private. The pack's `signer` field is the public key.
+The peer path creates signing keys for you and stores them in the
+network state directory.
 
 ## Trust store
 
-On import, a signed pack is checked against
-`~/.kimetsu/trust.json` (or `$KIMETSU_TRUST_STORE`, or `--trust-store`):
+**Peer-to-peer.** Invite and join write trusted pack signers for the
+`repo` mount into `trust.json` inside the network state directory
+(`~/.kimetsu/network/trust.json` by default). `request` checks the
+incoming pack against that store. A valid signature from a listed
+key **merges**. A valid signature from an unknown key is
+**quarantined** (review with `kimetsu brain memory accept` before it
+can affect retrieval). A bad signature or a scope mismatch is
+**rejected** (no SQL write).
+
+**Pack files.** Import checks `~/.kimetsu/trust.json` (or
+`$KIMETSU_TRUST_STORE`, or `--trust-store`):
 
 ```json
 {
@@ -57,18 +106,25 @@ On import, a signed pack is checked against
 }
 ```
 
-- A valid signature from a listed key for that mount **merges**.
-- A valid signature from an unknown key is **quarantined** (review with
-  `kimetsu brain memory accept` before it can affect retrieval).
-- A bad signature or a scope mismatch is **rejected** (no SQL write).
+An empty trust store quarantines every signed pack. Unsigned v1 packs
+skip the signature path; use them only for files you already trust,
+or pass `--quarantine`.
 
-An empty trust store quarantines every signed pack. Unsigned v1 packs skip
-the signature path; use them only for files you already trust, or pass
-`--quarantine`.
+These two trust files are separate. Adding a signer for file import
+does not change the peer-network store, and the other way around.
 
 ## Mounts in one line
 
-A **mount** is where a memory is allowed to live (`repo`, `user`, `org`,
-`skill`, `session`, `run`). Sharing only moves the mounts the pack or sync
-allowlist names. Local MCP write for agents is `repo` only (while write tools
-are on). Directory sync and packs never carry `run` / `session`.
+A **mount** is where a memory is allowed to live (`repo`, `user`,
+`org`, `skill`, `session`, `run`). Sharing only moves the mounts the
+pack or sync allowlist names. Local MCP write for agents is `repo`
+only (while write tools are on). Directory sync and packs never carry
+`run` / `session`. The peer path shares `repo` only.
+
+## What we have not tested
+
+Peer-to-peer has a loopback test (two processes on `127.0.0.1`). It
+has **not** been run on two physical machines, and there is no LAN or
+WAN measurement to cite. Do not assume hole-punching or a path
+across home NATs will work; relay is off, and port mapping stays off
+unless you pass `--map-ports`.

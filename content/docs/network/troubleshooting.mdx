@@ -1,9 +1,70 @@
 ---
 title: "Troubleshooting"
-description: "Shared-folder sync problems and signed-pack import failures."
+description: "Peer-to-peer reachability, builds, shared-folder sync, and signed-pack import failures."
 ---
 
 # Troubleshooting
+
+## Peer-to-peer
+
+**`kimetsu network` is an unknown command**
+
+You have v2.10.0 or earlier. Those packages do not include the peer
+commands. Use [directory sync](/docs/network#alternative-directory-sync)
+or [a signed pack file](/docs/network#alternative-a-signed-pack-file),
+or install a network-enabled build as described on the
+[Kimetsu Network](/docs/network) page (Rust 1.91+,
+`--features network`).
+
+**Status says the peer network is not included in this build**
+
+This binary was compiled without the `network` feature. Release and
+npm prebuilts (after the next release) include it. A source install
+needs `cargo install … kimetsu-cli --features network`. Nothing is
+listening.
+
+**`not on a network` / `already on a network`**
+
+Join first with `kimetsu network join <code>`. If you are already
+on a network and need to join a different one, run
+`kimetsu network leave` first.
+
+**Only the founder can invite**
+
+`kimetsu network invite` on a machine that joined with a code (a
+member, not the founder) is refused. Ask the person who created the
+network to issue a new code.
+
+**`request` cannot reach the peer**
+
+1. Leave `kimetsu network share` running on the other machine until
+   the request finishes.
+2. Pass the `peer:` line that `share` printed:
+   `kimetsu network request --peer <endpoint-id>@host:port`.
+3. The two machines must be able to reach that address. Local
+   discovery (mDNS) is on by default; `--no-mdns` turns it off and
+   then `--peer` is required.
+4. This is UDP (QUIC), not TCP. A firewall that allows only TCP will
+   block it. Relay is off, and router port mapping is off unless you
+   pass `--map-ports`. Crossing a home NAT has not been tested on
+   two physical machines.
+
+**Share refuses: the security scrub found something**
+
+The peer path will not send a pack if the scrubber finds credentials
+or PII (for example emails, phone numbers, or card numbers). Fix or
+remove those memories, then share again. This is on purpose.
+
+**Join is refused because the network shares more than the repo**
+
+The peer path only allows the `repo` mount. A roster that also
+shares `user` (or any other mount) is rejected and nothing is saved.
+
+**Join code is not valid**
+
+Copy the whole line, including the `knet1.` prefix. The code is a
+bearer credential — if it was truncated or re-typed, it will not
+decode.
 
 ## Directory sync
 
@@ -31,21 +92,23 @@ Both machines must use the **same** `sync.dir` and **different**
 kimetsu brain memory conflicts
 ```
 
-Directory sync is event-log replication. Concurrent supersedes can leave a
-conflict for you to review; they are not silently dropped.
+Directory sync is event-log replication. Concurrent supersedes can
+leave a conflict for you to review; they are not silently dropped.
 
 **Sync vs pack**
 
-`kimetsu brain sync import` refuses a `kimetsu_pack` file. Packs go through
-`kimetsu brain import`. Sync batches go through `kimetsu brain sync`.
+`kimetsu brain sync import` refuses a `kimetsu_pack` file. Packs go
+through `kimetsu brain import` (or `kimetsu network request` for the
+peer path). Sync batches go through `kimetsu brain sync`.
 
 ## Signed packs
 
 **Import says the signer is not trusted**
 
-Add the pack's `signer` public key to `~/.kimetsu/trust.json` under the mount
-you are importing into, or pass `--trust-store`. Without that, a valid
-signature is quarantined on purpose.
+Add the pack's `signer` public key to `~/.kimetsu/trust.json` under
+the mount you are importing into, or pass `--trust-store`. Without
+that, a valid signature is quarantined on purpose. Peer-to-peer uses
+a separate store under `~/.kimetsu/network/trust.json`.
 
 **`--sign-key` errors**
 
@@ -56,25 +119,17 @@ signature is quarantined on purpose.
 **URL imports land in quarantine**
 
 That is the default for `http(s)://` sources. Review with
-`kimetsu brain memory accept`, or pass `--no-quarantine` only when you trust
-the source.
-
-## Coming soon: peer-to-peer (QUIC)
-
-There is no `kimetsu invite`, `join`, `network`, `bus`, or `roster` command in
-the released CLI. The iroh QUIC bus lives in `kimetsu-bus` and is exercised by
-tests and operator examples only. When a user-facing dial path ships, expect
-UDP (not TCP) between peers, and the usual home-NAT / firewall / WSL caveats.
-Until then, use directory sync or signed pack files — they do **not** need
-UDP.
+`kimetsu brain memory accept`, or pass `--no-quarantine` only when
+you trust the source.
 
 ## Still stuck
 
 ```bash
 kimetsu doctor
+kimetsu network status
 kimetsu brain sync --status
 kimetsu plugin status
 ```
 
-For server-based sharing instead of a shared folder, see
+For server-based sharing instead of a peer or a shared folder, see
 [Kimetsu Remote](/docs/remote).

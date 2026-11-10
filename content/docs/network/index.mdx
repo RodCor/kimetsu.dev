@@ -1,65 +1,146 @@
 ---
 title: "Kimetsu Network"
-description: "Share project memory across machines with signed packs and directory sync. No server required."
+description: "Share project memory across machines with a peer connection, signed packs, or directory sync. No server required."
 ---
 
 # Kimetsu Network
 
 The Kimetsu Network is how two or more machines share the same project brain
-without a central server. Each machine keeps its own SQLite brain. **Today** you
-move lessons between them as **signed packs** (a one-shot file) or with
-**directory sync** (a shared folder that keeps event logs in sync). Mounts say
-which scope a memory may live in; MCP adapters wire your AI tool to the local
-brain on each machine.
+without a central server. Each machine keeps its own SQLite brain. You can
+move lessons between them in three ways:
 
-This is separate from [Kimetsu Remote](/docs/remote), which is an HTTP server
-for a team brain.
+- **Peer-to-peer** — invite a machine, join with a code, then `share` and
+  `request` a signed pack over a direct connection.
+- **Directory sync** — both machines write to the same shared folder
+  (Dropbox, Syncthing, a NAS, or a USB stick).
+- **Signed packs** — export a file on one machine and import it on another.
 
-> **Coming soon: peer-to-peer network.** A live roster / invite / `request_pack`
-> bus over QUIC (iroh) is implemented in the `kimetsu-bus` crate and covered by
-> tests and measurement examples, but the **released `kimetsu` CLI does not
-> link it yet**. There is no `kimetsu network`, `invite`, or `join` command.
-> Use directory sync or signed packs below until that ships.
+Mounts say which scope a memory may live in. The peer path shares the
+**repo** mount only. MCP adapters wire your AI tool to the local brain on
+each machine.
+
+This is separate from [Kimetsu Remote](/docs/remote), which is an HTTP
+server for a team brain.
+
+> **These commands are on `main` (PR #70).** They are **not** in the
+> current **v2.10.0** npm package or GitHub Release. The next prebuilt
+> and npm releases will include them. Until then, build from git (Rust
+> 1.91 or newer):
+>
+> ```bash
+> cargo install --git https://github.com/RodCor/kimetsu.git --locked kimetsu-cli --features network
+> ```
+>
+> Check with `kimetsu network status`. If the command is unknown, you
+> still have v2.10.0 or earlier — use [directory sync](#alternative-directory-sync)
+> or [a signed pack file](#alternative-a-signed-pack-file) below. A
+> source build without `--features network` answers that the peer
+> network is not included; nothing is listening.
 
 ## Install
 
-Install the `kimetsu` binary on every machine that will share. Full details are
-in **[Install & host wiring](/docs/install)**. Short version:
+Install the `kimetsu` binary on every machine that will share. Full
+details are in **[Install & host wiring](/docs/install)**.
 
 ```bash
-# npm (no Rust required) — lean prebuilt for your OS
+# After the next release (later than v2.10.0) — lean prebuilt for your OS
 npm install -g kimetsu-ai
 
-# or cargo
-cargo install kimetsu-cli
+# or, from source, with the peer network compiled in (Rust 1.91+)
+cargo install --git https://github.com/RodCor/kimetsu.git --locked kimetsu-cli --features network
 
-# or a GitHub Release archive for Linux / macOS / Windows
+# or a GitHub Release archive, once one newer than v2.10.0 is published
 # https://github.com/RodCor/kimetsu/releases
 ```
+
+`cargo install kimetsu-cli` from crates.io does **not** enable the
+network unless you pass `--features network`. Release and npm prebuilts
+will include that feature; it stays off at runtime until you invite or
+join.
 
 Check it:
 
 ```bash
 kimetsu --version
 kimetsu doctor
+kimetsu network status
 ```
 
-## Quickstart: connect two machines
+## Quickstart: connect two machines (about two minutes)
 
-The simplest continuous path is **directory sync**: both machines write to the
-same shared folder (Dropbox, Syncthing, a NAS, or a USB stick). Five steps.
+This is the peer path. Run both sides in the same project directory.
+The two machines should be able to reach each other (same local
+network is the usual case). This path has been tested on a single
+machine loopback, not yet on two physical computers.
 
-**1. Install Kimetsu on both machines** (see above).
-
-**2. Init the same project on each machine** (run inside the repo):
+**1. Install a network-enabled Kimetsu on both machines** (see above)
+and init the project if you have not already:
 
 ```bash
 cd /path/to/your/project
 kimetsu init
 ```
 
-**3. Point both brains at one shared folder**, and give each machine a unique
-id:
+**2. On machine A, create a one-person join code:**
+
+```bash
+kimetsu network invite --name laptop
+```
+
+Copy the code (it starts with `knet1.`). Treat it like a password.
+This command does not listen. The default name, if you omit `--name`,
+is `friends`. Names may use letters, numbers, `-`, and `_`.
+
+**3. On machine B, join:**
+
+```bash
+kimetsu network join knet1.…
+```
+
+Membership is saved. Kimetsu is still not listening. Only the person
+who created the network can invite someone else.
+
+**4. Share from A, then request on B:**
+
+```bash
+# on A — leave this running until B has finished
+kimetsu network share
+# it prints a line like:  peer: <endpoint-id>@host:port
+
+# on B
+kimetsu network request
+```
+
+If B cannot discover A on the local network, pass the `peer:` line
+that `share` printed:
+
+```bash
+kimetsu network request --peer <endpoint-id>@host:port
+```
+
+`share` listens until you press Ctrl-C, then nothing is listening.
+`request` verifies the pack signature before it writes anything.
+
+**5. Check, or leave:**
+
+```bash
+kimetsu network status
+kimetsu network leave
+```
+
+`status` never opens a socket. `leave` forgets this network on that
+machine.
+
+Wire your AI tool so it reads the local brain:
+
+```bash
+kimetsu plugin install claude-code   # or: codex | cursor | grok-bot | pi | openclaw
+```
+
+### Alternative: directory sync
+
+The simplest path on **today's v2.10.0** install, and the one that
+needs no UDP. Both machines write to the same shared folder.
 
 ```bash
 # on machine A
@@ -71,9 +152,8 @@ kimetsu config set sync.dir /path/to/shared/kimetsu-sync
 kimetsu config set sync.machine_id desktop
 ```
 
-`sync.dir` must be the same folder both can see. `sync.machine_id` must differ.
-
-**4. Record a lesson on machine A, then sync both sides:**
+`sync.dir` must be the same folder both can see. `sync.machine_id`
+must differ.
 
 ```bash
 # on A
@@ -85,19 +165,14 @@ kimetsu brain sync
 kimetsu brain memory list
 ```
 
-**5. Wire your AI tool** so it reads the shared brain (one command):
-
-```bash
-kimetsu plugin install claude-code   # or: codex | cursor | grok-bot | pi | openclaw
-```
-
-That is the whole loop. Run `kimetsu brain sync` whenever you want a push/pull,
-or leave `[sync] auto = true` (the default once `dir` is set) so session end
+Run `kimetsu brain sync` whenever you want a push/pull, or leave
+`[sync] auto = true` (the default once `dir` is set) so session end
 syncs for you. Check state with `kimetsu brain sync --status`.
 
-### One-shot alternative: hand someone a signed pack
+### Alternative: a signed pack file
 
-When you only need to copy lessons once (onboarding, a USB stick, email):
+When you only need to copy lessons once (onboarding, a USB stick,
+email):
 
 ```bash
 # on A — make a signer key once (keep this file private)
@@ -110,24 +185,40 @@ kimetsu brain export team.json.gz --scope repo --name team --version 1.0.0 --sig
 kimetsu brain import team.json.gz --scope-override repo
 ```
 
-Signed packs are `kimetsu_pack` 2. See [Security](/docs/network/security) for
-the trust store shape. Unsigned v1 packs still work for local files you trust.
+Signed packs are `kimetsu_pack` 2. See [Security](/docs/network/security)
+for the trust store shape. Unsigned v1 packs still work for local files
+you trust.
 
 ## What stays local
 
-Directory sync copies durable memory events only (`memory.accepted`,
-`memory.proposed`, `memory.rejected`, `memory.invalidated`, `memory.cited`,
-`memory.superseded`, and a few related ones). It does **not** copy session
-resume text, run telemetry, or the raw SQLite file. Signed packs never include
-`run` or `session` mounts. Your agent still talks to the brain over local MCP
-on each machine.
+The peer path and signed packs move a scrubbed snapshot of **repo**
+memories only. Directory sync copies durable memory events
+(`memory.accepted`, `memory.proposed`, `memory.rejected`,
+`memory.invalidated`, `memory.cited`, `memory.superseded`, and a few
+related ones). None of these paths copy session resume text, run
+telemetry, embeddings, or the raw SQLite file. Your agent still talks
+to the brain over local MCP on each machine.
+
+## Words we use
+
+| Word | Meaning |
+|------|---------|
+| **Kimetsu Network** | Sharing project memory across machines (peer-to-peer, directory sync, or a pack file) |
+| **Peer** | Another machine that has joined the same network |
+| **Mount** | The scope a memory may live in (`repo`, `user`, `org`, `skill`, `session`, `run`). The peer path shares `repo` only |
+| **Pack** | A signed, scrubbed snapshot of memories |
+| **Roster** | The signed list of who is on the network |
+| **Kimetsu Remote** | A separate HTTP server for a team brain, not this peer path |
 
 ## Next
 
-- **[Connect your tools](/docs/network/connect-your-tools)** — MCP snippets for
-  Claude Code, Codex, Cursor, and Grok Bot.
-- **[Security](/docs/network/security)** — what is shared and what is signed.
-- **[Troubleshooting](/docs/network/troubleshooting)** — sync folder and pack
-  import issues.
-- Prefer a server instead of a shared folder? See
-  **[Kimetsu Remote](/docs/remote)**.
+- **[Connect your tools](/docs/network/connect-your-tools)** — MCP snippets
+  for Claude Code, Codex, Cursor, and Grok Bot, plus the two network MCP
+  tools.
+- **[Security](/docs/network/security)** — what is shared, what is signed,
+  and when Kimetsu listens.
+- **[Troubleshooting](/docs/network/troubleshooting)** — reachability,
+  builds, sync folder, and pack import issues.
+- **[Reference](/docs/network/reference)** — every `kimetsu network`
+  command and flag.
+- Prefer a server instead? See **[Kimetsu Remote](/docs/remote)**.
