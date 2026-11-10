@@ -292,9 +292,13 @@
 
   .node {
     padding-top: 0.25rem;
-    padding-right: 1.25rem;
+    padding-inline: 0.75rem;
     padding-bottom: 2.75rem;
-    padding-left: 0;
+    text-align: center;
+  }
+
+  .brainBar {
+    margin-inline: auto;
   }
 
   .spine {
