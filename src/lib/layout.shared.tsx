@@ -12,8 +12,8 @@ export function baseOptions(): BaseLayoutProps {
       title: (
         <>
           <Image
-            src={`${BASE}/kimetsu-logo.png`}
-            alt="Kimetsu logo"
+            src={`${BASE}/kimetsu-logo-72.png`}
+            alt=""
             width={24}
             height={24}
             style={{ borderRadius: 4 }}
