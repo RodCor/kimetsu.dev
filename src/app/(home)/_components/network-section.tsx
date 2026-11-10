@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, Copy } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { NetworkDiagram } from "./network-diagram";
@@ -112,12 +112,9 @@ export function NetworkSection() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3 lg:justify-end">
-          <Link href="/docs/network" className="km-button-primary">
-            Read the Network guide <ArrowRight className="size-4" aria-hidden />
+          <Link href="/docs/network" className="km-text-link">
+            Read the Network guide
           </Link>
-          <a href="#get-started" className="km-button-secondary">
-            Install Kimetsu
-          </a>
         </div>
       </div>
 
