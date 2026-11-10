@@ -176,7 +176,7 @@ export function NetworkDiagram({
         <fieldset aria-label="Animation playback" className={styles.playback}>
           <button
             type="button"
-            className="km-button-primary"
+            className={`${styles.play} km-button-primary`}
             onClick={togglePlay}
             aria-disabled={reduced}
             aria-pressed={playing}
