@@ -35,26 +35,28 @@ export default function HomePage() {
       <NetworkSection />
       <BenchmarkResults />
       <QuickStart />
-      <AboutContact />
-      <footer className="mx-auto flex max-w-6xl flex-col justify-between gap-5 px-6 py-8 text-sm sm:flex-row">
-        <p className="font-mono font-semibold">Kimetsu</p>
-        <nav aria-label="Footer" className="flex flex-wrap gap-5">
-          <a href="#about" className="km-text-link">
-            About
-          </a>
-          <a href="#contact" className="km-text-link">
-            Contact
-          </a>
-          <a href={links.github} className="km-text-link">
-            GitHub
-          </a>
-          <Link href="/docs/changelog" className="km-text-link">
-            Changelog
-          </Link>
-          <a href="/llms.txt" className="km-text-link">
-            For agents
-          </a>
-        </nav>
+      <footer className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8 text-sm">
+        <AboutContact />
+        <div className="flex flex-col justify-between gap-5 border-t border-fd-border pt-6 sm:flex-row sm:items-center">
+          <p className="font-mono font-semibold">Kimetsu</p>
+          <nav aria-label="Footer" className="flex flex-wrap gap-5">
+            <a href="#about" className="km-text-link">
+              About
+            </a>
+            <a href="#contact" className="km-text-link">
+              Contact
+            </a>
+            <a href={links.github} className="km-text-link">
+              GitHub
+            </a>
+            <Link href="/docs/changelog" className="km-text-link">
+              Changelog
+            </Link>
+            <a href="/llms.txt" className="km-text-link">
+              For agents
+            </a>
+          </nav>
+        </div>
       </footer>
     </div>
   );
