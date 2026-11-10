@@ -5,17 +5,22 @@ import Link from "next/link";
 import { useState } from "react";
 
 const hosts = [
-  { id: "claude-code", label: "Claude Code" },
-  { id: "codex", label: "Codex" },
-  { id: "cursor", label: "Cursor" },
-  { id: "pi", label: "Pi" },
-  { id: "openclaw", label: "OpenClaw" },
+  {
+    id: "claude-code",
+    label: "Claude Code",
+    wire: "kimetsu setup --host claude-code",
+  },
+  { id: "codex", label: "Codex", wire: "kimetsu setup --host codex" },
+  { id: "cursor", label: "Cursor", wire: "kimetsu plugin install cursor" },
+  { id: "pi", label: "Pi", wire: "kimetsu setup --host pi" },
+  { id: "openclaw", label: "OpenClaw", wire: "kimetsu setup --host openclaw" },
 ];
 
 export function QuickStart() {
   const [host, setHost] = useState(hosts[0].id);
   const [feedback, setFeedback] = useState({ command: "", ok: false });
-  const command = `npm install -g kimetsu-ai\nkimetsu setup --host ${host}`;
+  const wire = hosts.find((item) => item.id === host)?.wire ?? hosts[0].wire;
+  const command = `npm install -g kimetsu-ai\n${wire}`;
   const currentFeedback = feedback.command === command;
 
   async function copyCommands() {

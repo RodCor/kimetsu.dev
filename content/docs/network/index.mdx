@@ -22,20 +22,20 @@ each machine.
 This is separate from [Kimetsu Remote](/docs/remote), which is an HTTP
 server for a team brain.
 
-> **These commands are on `main` (PR #70).** They are **not** in the
-> current **v2.10.0** npm package or GitHub Release. The next prebuilt
-> and npm releases will include them. Until then, build from git (Rust
-> 1.91 or newer):
+> **Peer commands ship in [v2.11.0](https://github.com/RodCor/kimetsu/releases/tag/v2.11.0).**
+> Prebuilt archives and `npm install -g kimetsu-ai` include them.
+> `cargo install kimetsu-cli` from crates.io does **not** enable the
+> network unless you pass `--features network` (Rust 1.91 or newer):
 >
 > ```bash
-> cargo install --git https://github.com/RodCor/kimetsu.git --locked kimetsu-cli --features network
+> cargo install kimetsu-cli --features network
 > ```
 >
-> Check with `kimetsu network status`. If the command is unknown, you
-> still have v2.10.0 or earlier — use [directory sync](#alternative-directory-sync)
+> Check with `kimetsu network status`. If the command is unknown, the
+> binary is older than v2.11.0 — use [directory sync](#alternative-directory-sync)
 > or [a signed pack file](#alternative-a-signed-pack-file) below. A
-> source build without `--features network` answers that the peer
-> network is not included; nothing is listening.
+> build without `--features network` answers that the peer network is
+> not included; nothing is listening.
 
 ## Install
 
@@ -43,20 +43,20 @@ Install the `kimetsu` binary on every machine that will share. Full
 details are in **[Install & host wiring](/docs/install)**.
 
 ```bash
-# After the next release (later than v2.10.0) — lean prebuilt for your OS
+# v2.11.0 or newer — lean prebuilt for your OS (network included)
 npm install -g kimetsu-ai
 
-# or, from source, with the peer network compiled in (Rust 1.91+)
-cargo install --git https://github.com/RodCor/kimetsu.git --locked kimetsu-cli --features network
+# or, from crates.io, with the peer network compiled in (Rust 1.91+)
+cargo install kimetsu-cli --features network
 
-# or a GitHub Release archive, once one newer than v2.10.0 is published
+# or a GitHub Release archive from v2.11.0 onward
 # https://github.com/RodCor/kimetsu/releases
 ```
 
 `cargo install kimetsu-cli` from crates.io does **not** enable the
-network unless you pass `--features network`. Release and npm prebuilts
-will include that feature; it stays off at runtime until you invite or
-join.
+network unless you pass `--features network`. v2.11.0 release and npm
+prebuilts include that feature; it stays off at runtime until you
+invite or join.
 
 Check it:
 
@@ -70,8 +70,8 @@ kimetsu network status
 
 This is the peer path. Run both sides in the same project directory.
 The two machines should be able to reach each other (same local
-network is the usual case). This path has been tested on a single
-machine loopback, not yet on two physical computers.
+network is the usual case). Published measurements are single-machine
+loopback. A two-machine figure is not recorded yet.
 
 **1. Install a network-enabled Kimetsu on both machines** (see above)
 and init the project if you have not already:
@@ -139,8 +139,9 @@ kimetsu plugin install claude-code   # or: codex | cursor | grok-bot | pi | open
 
 ### Alternative: directory sync
 
-The simplest path on **today's v2.10.0** install, and the one that
-needs no UDP. Both machines write to the same shared folder.
+The path that needs no UDP. It works on v2.11.0 and on older installs
+that do not have `kimetsu network`. Both machines write to the same
+shared folder.
 
 ```bash
 # on machine A
@@ -212,6 +213,8 @@ to the brain over local MCP on each machine.
 
 ## Next
 
+- **[Results](/docs/network/results)** — what one brain adds, and what
+  merged memory keeps, with the measurement caveats.
 - **[Connect your tools](/docs/network/connect-your-tools)** — MCP snippets
   for Claude Code, Codex, Cursor, and Grok Bot, plus the two network MCP
   tools.
