@@ -1,8 +1,4 @@
-"use client";
-
-import { Check, Copy } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { NetworkDiagram } from "./network-diagram";
 
 // Owner-approved homepage figures only. Full tables live on /docs/network/results.
@@ -23,36 +19,6 @@ const GAINS = [
     value: "about 99%",
     label: "Over QUIC between machines",
     detail: "Of the gain kept (7B LoCoMo 40.1 vs 40.3).",
-  },
-] as const;
-
-const INTEGRATIONS = [
-  {
-    name: "Grok Bot",
-    command: "kimetsu plugin install grok-bot",
-    note: "Writes an operator snippet at .kimetsu/hosts/grok-bot.md. Not a settings file.",
-  },
-  {
-    name: "Codex",
-    via: "OpenAI",
-    command: "kimetsu plugin install codex",
-    note: "Writes [mcp_servers.kimetsu] in .codex/config.toml.",
-  },
-  {
-    name: "Claude Code",
-    via: "Anthropic",
-    command: "kimetsu plugin install claude-code",
-    note: "Writes mcpServers.kimetsu in .mcp.json. Claude Code still asks you to approve it.",
-  },
-  {
-    name: "Cursor",
-    command: "kimetsu plugin install cursor",
-    note: "Writes .cursor/mcp.json and a guidance rule. setup --host does not list Cursor.",
-  },
-  {
-    name: "Pi",
-    command: "pi install npm:kimetsu-pi",
-    note: "kimetsu-pi 0.2.0. Share stays kimetsu network share in a terminal.",
   },
 ] as const;
 
@@ -77,20 +43,6 @@ const FLOW = [
 ] as const;
 
 export function NetworkSection() {
-  const [copied, setCopied] = useState<string | null>(null);
-  const [copyError, setCopyError] = useState(false);
-
-  async function copyCommand(command: string) {
-    try {
-      await navigator.clipboard.writeText(command);
-      setCopied(command);
-      setCopyError(false);
-    } catch {
-      setCopied(command);
-      setCopyError(true);
-    }
-  }
-
   return (
     <section
       id="network"
@@ -173,61 +125,11 @@ export function NetworkSection() {
         </p>
       </div>
 
-      <div className="mt-10">
-        <h3 className="text-lg font-semibold">
-          Plug in the agent you already use
-        </h3>
-        <ul className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-          {INTEGRATIONS.map((item) => {
-            const copiedThis = copied === item.command;
-            return (
-              <li
-                key={item.name}
-                className="flex min-w-0 flex-col rounded-2xl border border-fd-border p-4"
-              >
-                <h4 className="text-sm font-semibold">
-                  {item.name}
-                  {"via" in item && item.via ? (
-                    <span className="font-normal text-fd-muted-foreground">
-                      {" "}
-                      · {item.via}
-                    </span>
-                  ) : null}
-                </h4>
-                <p className="mt-2 text-xs leading-5 text-fd-muted-foreground">
-                  {item.note}
-                </p>
-                <code
-                  translate="no"
-                  className="mt-3 block font-mono text-xs leading-5 break-words"
-                >
-                  {item.command}
-                </code>
-                <button
-                  type="button"
-                  className="km-copy-button mt-3 self-start"
-                  onClick={() => copyCommand(item.command)}
-                  aria-label={`Copy the ${item.name} install command`}
-                >
-                  {copiedThis && !copyError ? (
-                    <Check className="size-4" aria-hidden />
-                  ) : (
-                    <Copy className="size-4" aria-hidden />
-                  )}
-                  {copiedThis && !copyError ? "Copied" : "Copy"}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="sr-only" aria-live="polite">
-          {copied
-            ? copyError
-              ? `Copy is unavailable for ${copied}. Select the command and copy it.`
-              : `Copied ${copied}.`
-            : ""}
-        </p>
-      </div>
+      <p className="mt-10">
+        <a href="#get-started" className="km-text-link">
+          Install commands in Get started
+        </a>
+      </p>
 
       <div className="mt-8 max-w-3xl text-sm leading-6 text-fd-muted-foreground">
         <p>
