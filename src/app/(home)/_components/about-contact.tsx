@@ -3,7 +3,7 @@ import { links } from "@/lib/shared";
 
 export function AboutContact() {
   return (
-    <div className="grid gap-5 sm:grid-cols-[minmax(0,1.6fr)_minmax(14rem,0.8fr)] sm:items-start">
+    <div className="grid max-w-2xl gap-5">
       <section
         id="about"
         aria-labelledby="about-title"

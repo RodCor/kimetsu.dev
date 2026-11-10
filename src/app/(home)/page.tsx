@@ -37,9 +37,9 @@ export default function HomePage() {
       <BenchmarkResults />
       <ExploreSection />
       <QuickStart />
-      <footer className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-8 text-sm">
+      <footer className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8 text-sm">
         <AboutContact />
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+        <div className="flex flex-col justify-between gap-5 border-t border-fd-border pt-6 sm:flex-row sm:items-center">
           <p className="font-mono font-semibold">Kimetsu</p>
           <nav aria-label="Footer" className="flex flex-wrap gap-5">
             <a href="#about" className="km-text-link">
