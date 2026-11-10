@@ -86,13 +86,22 @@ test("documents the network result tables and links them from the index", () => 
   assert.match(results, /RTX 5060 Ti 16 GB/);
 });
 
-test("shows the real install commands", () => {
+test("does not repeat install commands and links them to get started", () => {
   for (const command of [
     "kimetsu plugin install grok-bot",
     "kimetsu plugin install codex",
     "kimetsu plugin install claude-code",
     "kimetsu plugin install cursor",
     "pi install npm:kimetsu-pi",
+  ]) {
+    assert.equal(section.includes(command), false, command);
+  }
+  assert.match(
+    section,
+    /<a href="#get-started" className="km-text-link">\s*Install commands in Get started\s*<\/a>/,
+  );
+  assert.equal(section.includes("km-button-primary"), false);
+  for (const command of [
     "kimetsu network invite --name laptop",
     "kimetsu network join <code>",
     "kimetsu network share",
