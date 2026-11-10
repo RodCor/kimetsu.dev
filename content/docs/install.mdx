@@ -82,7 +82,7 @@ disk. `kimetsu uninstall` removes those same verified binaries; it leaves
 project `.kimetsu/` directories and the user brain intact unless you explicitly
 pass `--delete-user-data`.
 
-**Prerequisites:** Rust 1.85+ (stable, source builds only) and a model
+**Prerequisites:** Rust 1.91+ (stable, source builds only) and a model
 credential for the surface you use (`CLAUDE_CODE_OAUTH_TOKEN`,
 `ANTHROPIC_API_KEY`, or `OPENAI_API_KEY`).
 On AWS Bedrock, set `[model] provider = "bedrock"` and authenticate with
@@ -217,6 +217,7 @@ own corpus), see
 To share one project brain across machines **without a server**, see
 **[Kimetsu Network](/docs/network)** (peer-to-peer `kimetsu network`
 commands, signed packs, or a shared sync folder). The peer commands
-are on `main` and will ship in the next prebuilt/npm release; they
-are not in v2.10.0. For a central HTTP brain instead, see
+ship in the v2.11.0 prebuilt and npm binaries. `cargo install
+kimetsu-cli` still needs `--features network`, because that feature
+is not on by default. For a central HTTP brain instead, see
 [Kimetsu Remote](/docs/remote).

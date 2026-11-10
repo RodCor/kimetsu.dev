@@ -32,6 +32,10 @@ export function baseOptions(): BaseLayoutProps {
         external: true,
       },
       {
+        text: "Network",
+        url: "/#network",
+      },
+      {
         text: "Benchmarks",
         url: "/#benchmarks",
       },

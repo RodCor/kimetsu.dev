@@ -1,0 +1,45 @@
+---
+title: Results
+description: "What one Kimetsu brain adds, and what each agent keeps when memory is merged over the network."
+---
+
+# Results
+
+These are the measured gains from one Kimetsu brain, and from merging
+memory across a network. The harness is
+[kimetsu-bench](https://github.com/RodCor/kimetsu-bench)
+(`network-bench/` and `gpu-suite/`).
+
+## One Kimetsu brain vs no memory
+
+| Model and benchmark | No memory | With Kimetsu | Improvement |
+| --- | --- | --- | --- |
+| Qwen 7B, LoCoMo | 22.8 | 40.3 | +77% (1.77x) |
+| Qwen 0.5B, LongMemEval oracle | 5.7 | 21.4 | +273% (3.7x) |
+| Qwen 0.5B, LongMemEval s-cleaned | 5.4 | 20.3 | +279% (3.8x) |
+| Qwen 0.5B, LoCoMo (answerable questions) | 2.1 | 22.1 | about 10x |
+
+## Network: each agent alone vs merged memory
+
+| Model and benchmark | Alone | Merged | Improvement |
+| --- | --- | --- | --- |
+| Qwen 7B, LoCoMo | 31.8 | 38.9 | +22% |
+| Qwen 7B, LongMemEval oracle | 11.1 | 27.9 | +151% |
+| Qwen 0.5B, LoCoMo (answerable questions) | 16.2 | 21.9 | +35% |
+| Qwen 0.5B, LongMemEval oracle | 14.1 | 23.4 | +65% |
+| Qwen 0.5B, LongMemEval s-cleaned | 14.8 | 21.3 | +44% |
+
+QUIC transport keeps about 99% of the gain (7B LoCoMo 40.1 vs 40.3
+in-process; 0.5B LongMemEval oracle 22.7 vs 23.0 directory sync).
+
+## Caveats
+
+- LongMemEval scores are proxy token F1, not the official LLM judge.
+- QUIC runs were single-machine loopback.
+- LoCoMo rows marked "answerable questions" exclude the adversarial
+  category 5, because in the full LoCoMo score the 0.5B no-memory
+  baseline looks better only by abstaining on those.
+- Hybrid retrieval results are not included pending a rerun after
+  [issue #68](https://github.com/RodCor/kimetsu/issues/68).
+
+Qwen 7B runs on an RTX 5060 Ti 16 GB. Qwen 0.5B runs on CPU and GPU.

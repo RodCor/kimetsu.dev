@@ -9,18 +9,18 @@ description: "Peer-to-peer reachability, builds, shared-folder sync, and signed-
 
 **`kimetsu network` is an unknown command**
 
-You have v2.10.0 or earlier. Those packages do not include the peer
-commands. Use [directory sync](/docs/network#alternative-directory-sync)
+The binary is older than v2.11.0. Those packages do not include the
+peer commands. Use [directory sync](/docs/network#alternative-directory-sync)
 or [a signed pack file](/docs/network#alternative-a-signed-pack-file),
-or install a network-enabled build as described on the
-[Kimetsu Network](/docs/network) page (Rust 1.91+,
-`--features network`).
+or install v2.11.0 (or a source build with `--features network`) as
+described on the [Kimetsu Network](/docs/network) page. Source builds
+need Rust 1.91+.
 
 **Status says the peer network is not included in this build**
 
-This binary was compiled without the `network` feature. Release and
-npm prebuilts (after the next release) include it. A source install
-needs `cargo install … kimetsu-cli --features network`. Nothing is
+This binary was compiled without the `network` feature. v2.11.0
+release and npm prebuilts include it. A crates.io or source install
+needs `cargo install kimetsu-cli --features network`. Nothing is
 listening.
 
 **`not on a network` / `already on a network`**

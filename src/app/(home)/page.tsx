@@ -4,6 +4,7 @@ import { links } from "@/lib/shared";
 import { AboutContact } from "./_components/about-contact";
 import { BenchmarkResults } from "./_components/benchmark-results";
 import { ExploreSection } from "./_components/explore-section";
+import { NetworkSection } from "./_components/network-section";
 import { QuickStart } from "./_components/quick-start";
 
 export default function HomePage() {
@@ -32,6 +33,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <NetworkSection />
       <BenchmarkResults />
       <ExploreSection />
       <QuickStart />

@@ -190,3 +190,308 @@ html > body[data-scroll-locked] {
     transition: none !important;
   }
 }
+
+/* Network storyboard. Resting styles are the final frame (step 5). */
+.nh-svg {
+  width: 100%;
+  height: auto;
+  color: var(--color-fd-foreground);
+}
+
+.nh-svg text {
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.nh-svg-stack {
+  display: block;
+}
+
+.nh-svg-wide {
+  display: none;
+}
+
+.nh-panel {
+  fill: color-mix(in srgb, var(--color-fd-foreground) 6%, transparent);
+  stroke: color-mix(in srgb, var(--color-fd-foreground) 28%, transparent);
+  stroke-width: 1.5;
+}
+
+.nh-brain {
+  fill: color-mix(
+    in srgb,
+    var(--color-fd-primary) 18%,
+    var(--color-fd-background)
+  );
+  stroke: var(--color-fd-primary);
+  stroke-width: 1.5;
+}
+
+.nh-network {
+  fill: var(--color-fd-card);
+  stroke: var(--color-fd-primary);
+  stroke-width: 2;
+}
+
+.nh-ink {
+  fill: currentColor;
+}
+
+.nh-mute {
+  fill: var(--color-fd-muted-foreground);
+}
+
+.nh-accent {
+  fill: var(--color-fd-primary);
+}
+
+.nh-lesson-shape,
+.nh-answer-shape {
+  fill: color-mix(
+    in srgb,
+    var(--color-fd-primary) 24%,
+    var(--color-fd-background)
+  );
+  stroke: var(--color-fd-primary);
+  stroke-width: 1.25;
+}
+
+.nh-pack-shape {
+  fill: var(--color-fd-primary);
+}
+
+.nh-pack-label {
+  fill: var(--color-fd-primary-foreground);
+}
+
+.nh-request-path {
+  fill: none;
+  stroke: var(--color-fd-primary);
+  stroke-width: 2;
+}
+
+.nh-lesson {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.nh-brain-a,
+.nh-seal,
+.nh-answer,
+.nh-cite {
+  opacity: 1;
+}
+
+.nh-request {
+  opacity: 0;
+}
+
+.nh-pack {
+  opacity: 1;
+  transform: translate(var(--pack-b-x), var(--pack-b-y));
+}
+
+.nh.is-step[data-step="0"] .nh-lesson {
+  opacity: 1;
+  transform: none;
+}
+
+.nh.is-step[data-step="0"] .nh-brain-a {
+  opacity: 0.4;
+}
+
+.nh.is-step[data-step="0"] .nh-seal,
+.nh.is-step[data-step="1"] .nh-seal,
+.nh.is-step[data-step="0"] .nh-answer,
+.nh.is-step[data-step="1"] .nh-answer,
+.nh.is-step[data-step="2"] .nh-answer,
+.nh.is-step[data-step="3"] .nh-answer,
+.nh.is-step[data-step="0"] .nh-cite,
+.nh.is-step[data-step="1"] .nh-cite,
+.nh.is-step[data-step="2"] .nh-cite,
+.nh.is-step[data-step="3"] .nh-cite {
+  opacity: 0;
+}
+
+.nh.is-step[data-step="3"] .nh-request {
+  opacity: 1;
+}
+
+.nh.is-step[data-step="0"] .nh-pack,
+.nh.is-step[data-step="1"] .nh-pack {
+  opacity: 0;
+  transform: translate(var(--pack-a-x), var(--pack-a-y));
+}
+
+.nh.is-step[data-step="2"] .nh-pack {
+  opacity: 1;
+  transform: translate(var(--pack-n-x), var(--pack-n-y));
+}
+
+.nh.is-playing .nh-anim {
+  animation-duration: 12.2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: var(--nh-delay, 0ms);
+  animation-fill-mode: both;
+}
+
+.nh.is-playing .nh-lesson {
+  animation-name: nh-lesson;
+}
+
+.nh.is-playing .nh-brain-a {
+  animation-name: nh-brain;
+}
+
+.nh.is-playing .nh-pack {
+  animation-name: nh-pack;
+}
+
+.nh.is-playing .nh-seal {
+  animation-name: nh-seal;
+}
+
+.nh.is-playing .nh-request {
+  animation-name: nh-request;
+}
+
+.nh.is-playing .nh-answer {
+  animation-name: nh-answer;
+}
+
+.nh.is-playing .nh-cite {
+  animation-name: nh-cite;
+}
+
+.nh-step {
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.6rem;
+  background: var(--color-fd-background);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.nh-step.is-current {
+  border-color: var(--color-fd-primary);
+  background: color-mix(
+    in srgb,
+    var(--color-fd-primary) 12%,
+    var(--color-fd-background)
+  );
+  color: var(--color-fd-primary);
+}
+
+@keyframes nh-lesson {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  6%,
+  18% {
+    opacity: 1;
+    transform: none;
+  }
+  30%,
+  100% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.85);
+  }
+}
+
+@keyframes nh-brain {
+  0%,
+  18% {
+    opacity: 0.4;
+  }
+  28%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes nh-pack {
+  0%,
+  36% {
+    opacity: 0;
+    transform: translate(var(--pack-a-x), var(--pack-a-y));
+  }
+  40% {
+    opacity: 1;
+    transform: translate(var(--pack-a-x), var(--pack-a-y));
+  }
+  52%,
+  59% {
+    opacity: 1;
+    transform: translate(var(--pack-n-x), var(--pack-n-y));
+  }
+  77%,
+  100% {
+    opacity: 1;
+    transform: translate(var(--pack-b-x), var(--pack-b-y));
+  }
+}
+
+@keyframes nh-seal {
+  0%,
+  36% {
+    opacity: 0;
+  }
+  44%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes nh-request {
+  0%,
+  59% {
+    opacity: 0;
+  }
+  66%,
+  74% {
+    opacity: 1;
+  }
+  82%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes nh-answer {
+  0%,
+  77% {
+    opacity: 0;
+  }
+  86%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes nh-cite {
+  0%,
+  86% {
+    opacity: 0;
+  }
+  94%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .nh-svg-stack {
+    display: none;
+  }
+
+  .nh-svg-wide {
+    display: block;
+  }
+}

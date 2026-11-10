@@ -108,10 +108,30 @@ stores on `repo`. After a retrieved memory helps, call
 `kimetsu_brain_cite` with `exposure_id` and `memory_id` from context.
 `outcome` is `helped`, `noop`, or `harmed`.
 
+## Pi package
+
+Pi has no MCP. Two installs are current:
+
+```bash
+pi install npm:kimetsu-pi
+kimetsu plugin install pi
+```
+
+`pi install npm:kimetsu-pi` installs the Pi package. kimetsu-pi 0.2.0
+targets Kimetsu 2.11.0. It can call `kimetsu_network_status` and
+`kimetsu_network_request`, and it checks `kimetsu --version` before
+any network command. Sharing stays a terminal command. The extension
+does not run `kimetsu network share`.
+
+`kimetsu plugin install pi` writes the CLI extension and skill into
+`.pi/` (or `~/.pi/agent/` when `--scope global`).
+
 ## Network MCP tools
 
-Network-enabled builds also register two tools. They are listed
-only when the binary was compiled with the `network` feature.
+v2.11.0 prebuilt and npm binaries are network-enabled. A crates.io
+install still needs `--features network`. Those builds register two
+tools. They are listed only when the binary was compiled with the
+`network` feature.
 
 - **`kimetsu_network_status`** — whether this machine has joined a
   peer network. It does not listen, discover, or contact a relay.
