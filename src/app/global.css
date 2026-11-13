@@ -65,9 +65,7 @@ html {
 }
 
 .km-hero {
-  /* Bottom is one spacing step (0.5rem) above the shared gap:
-     4rem desktop (64px, spacing-16, same as py-16), 3.5rem on mobile. */
-  padding-block: var(--km-section-gap) calc(var(--km-section-gap) + 0.5rem);
+  padding-block: var(--km-section-gap);
   padding-inline: 1.5rem;
   background-image: radial-gradient(
     var(--color-fd-border) 0.7px,
