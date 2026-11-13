@@ -31,7 +31,7 @@ export function ProjectsSection() {
               Explore all projects
               <ArrowRight
                 aria-hidden
-                className="km-project-arrow size-4 group-hover:translate-x-0.5"
+                className="size-4 transition-transform group-hover:translate-x-0.5"
               />
             </Link>
           </div>
@@ -40,7 +40,7 @@ export function ProjectsSection() {
         <div className="grid gap-4 md:grid-cols-2">
           {projects.map((project) => (
             <div key={project.slug}>
-              <article className="km-project-card group flex h-full flex-col rounded-2xl border border-fd-border bg-fd-background p-6 hover:border-fd-primary/40">
+              <article className="group flex h-full flex-col rounded-2xl border border-fd-border bg-fd-background p-6 transition-colors hover:border-fd-primary/40">
                 <div className="mb-5 flex items-center justify-between gap-3">
                   <span className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-fd-primary">
                     {project.eyebrow}
@@ -68,21 +68,21 @@ export function ProjectsSection() {
                 <div className="flex flex-wrap gap-3">
                   <a
                     href={project.website}
-                    className="km-project-open inline-flex items-center gap-1.5 rounded-lg bg-fd-primary px-4 py-2 text-sm font-medium text-fd-primary-foreground hover:opacity-90"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-fd-primary px-4 py-2 text-sm font-medium text-fd-primary-foreground transition-opacity hover:opacity-90"
                   >
                     Open project <ArrowRight aria-hidden className="size-4" />
                   </a>
                   <a
                     href={project.repository}
                     aria-label={`${project.name} repository`}
-                    className="km-project-action inline-flex items-center gap-1.5 rounded-lg border border-fd-border px-4 py-2 text-sm font-medium hover:bg-fd-accent"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-fd-border px-4 py-2 text-sm font-medium transition-colors hover:bg-fd-accent"
                   >
                     <GitFork className="size-4" aria-hidden /> Source
                   </a>
                   {project.agentEntry ? (
                     <a
                       href={project.agentEntry}
-                      className="km-project-action inline-flex items-center gap-1.5 rounded-lg border border-fd-border px-4 py-2 text-sm font-medium hover:bg-fd-accent"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-fd-border px-4 py-2 text-sm font-medium transition-colors hover:bg-fd-accent"
                     >
                       <Bot className="size-4" aria-hidden /> Agent entry
                     </a>

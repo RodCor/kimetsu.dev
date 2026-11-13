@@ -153,22 +153,6 @@ html {
   background: var(--color-fd-accent);
 }
 
-.km-project-card {
-  transition: border-color var(--km-dur-fast) var(--km-ease-out);
-}
-
-.km-project-arrow {
-  transition: transform var(--km-dur-fast) var(--km-ease-out);
-}
-
-.km-project-open {
-  transition: opacity var(--km-dur-fast) var(--km-ease-out);
-}
-
-.km-project-action {
-  transition: background-color var(--km-dur-fast) var(--km-ease-out);
-}
-
 .km-text-link {
   color: var(--color-fd-primary);
   font-size: 0.875rem;

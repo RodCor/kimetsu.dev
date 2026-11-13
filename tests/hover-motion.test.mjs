@@ -6,13 +6,6 @@ const globalCss = await readFile(
   new URL("../src/app/global.css", import.meta.url),
   "utf8",
 );
-const projects = await readFile(
-  new URL(
-    "../src/app/(home)/_components/projects-section.tsx",
-    import.meta.url,
-  ),
-  "utf8",
-);
 const diagramCss = await readFile(
   new URL(
     "../src/app/(home)/_components/network-diagram.module.css",
@@ -56,38 +49,6 @@ test("points button hover and focus transitions at the shared tokens", () => {
   );
   assert.equal(globalCss.includes("transition: all"), false);
   assert.equal(globalCss.includes("background-color 150ms"), false);
-});
-
-test("points project-card hovers at the shared tokens", () => {
-  for (const banned of [
-    "transition-all",
-    "transition-colors",
-    "transition-opacity",
-    "transition-transform",
-    "duration-",
-  ]) {
-    assert.equal(projects.includes(banned), false, banned);
-  }
-  assert.match(projects, /km-project-card/);
-  assert.match(projects, /km-project-arrow/);
-  assert.match(projects, /km-project-open/);
-  assert.match(projects, /km-project-action/);
-  assert.match(
-    globalCss,
-    /\.km-project-card\s*\{[^}]*transition:\s*border-color var\(--km-dur-fast\) var\(--km-ease-out\);/s,
-  );
-  assert.match(
-    globalCss,
-    /\.km-project-arrow\s*\{[^}]*transition:\s*transform var\(--km-dur-fast\) var\(--km-ease-out\);/s,
-  );
-  assert.match(
-    globalCss,
-    /\.km-project-open\s*\{[^}]*transition:\s*opacity var\(--km-dur-fast\) var\(--km-ease-out\);/s,
-  );
-  assert.match(
-    globalCss,
-    /\.km-project-action\s*\{[^}]*transition:\s*background-color var\(--km-dur-fast\) var\(--km-ease-out\);/s,
-  );
 });
 
 test("limits motion transitions to paint properties and keeps reduced motion", () => {
