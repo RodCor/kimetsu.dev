@@ -11,7 +11,6 @@ const homeFiles = [
   "src/app/(home)/page.tsx",
   "src/app/(home)/_components/about-contact.tsx",
   "src/app/(home)/_components/benchmark-results.tsx",
-  "src/app/(home)/_components/home-visuals.tsx",
   "src/app/(home)/_components/network-section.tsx",
   "src/app/(home)/_components/quick-start.tsx",
 ];
