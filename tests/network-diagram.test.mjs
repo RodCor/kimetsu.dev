@@ -56,6 +56,16 @@ test("styles Play/Pause as a secondary control that stays enabled", () => {
   );
 });
 
+test("mounts reduced-motion step layers only after the preference is known", () => {
+  assert.match(diagram, /const \[reduced, setReduced\] = useState\(false\)/);
+  assert.match(diagram, /data-reduced=\{reduced \? "true" : "false"\}/);
+  assert.match(diagram, /\{reduced\s*\?\s*STEPS\.map\(\(item, index\) =>/s);
+  assert.match(
+    css,
+    /\.root\[data-reduced="true"\] \.live \{\s*display: none;\s*\}/,
+  );
+});
+
 test("crossfades reduced-motion step changes with opacity only", () => {
   assert.match(diagram, /styles\.stepLayer/);
   assert.equal(diagram.includes("if (reduced) return"), false);

@@ -96,7 +96,7 @@ export function NetworkDiagram({
   loopMs: number;
   motionQuery: string;
 }) {
-  const [reduced, setReduced] = useState(true);
+  const [reduced, setReduced] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [step, setStep] = useState(STEPS.length - 1);
   const [instant, setInstant] = useState(true);
@@ -160,21 +160,24 @@ export function NetworkDiagram({
     <div
       className={`${styles.root} mt-8 rounded-2xl border border-fd-border bg-fd-card p-4 sm:p-5`}
       data-instant={instant ? "true" : "false"}
+      data-reduced={reduced ? "true" : "false"}
     >
       <p className="sr-only">
         How Kimetsu Network moves a lesson from Agent A to Agent B
       </p>
       <div className={styles.stage} aria-hidden="true">
         <DiagramTrack step={step} className={styles.live} />
-        {STEPS.map((item, index) => (
-          <div
-            key={item.title}
-            className={styles.stepLayer}
-            data-active={index === step ? "true" : undefined}
-          >
-            <DiagramTrack step={index} />
-          </div>
-        ))}
+        {reduced
+          ? STEPS.map((item, index) => (
+              <div
+                key={item.title}
+                className={styles.stepLayer}
+                data-active={index === step ? "true" : undefined}
+              >
+                <DiagramTrack step={index} />
+              </div>
+            ))
+          : null}
       </div>
       <p
         id="network-how-caption"
@@ -237,12 +240,10 @@ export function NetworkDiagram({
           ))}
         </fieldset>
       </div>
-      {reduced ? (
-        <p className={styles.note}>
-          Reduced motion is on, so this stays on the final frame. Use the step
-          buttons to move through the story without animation.
-        </p>
-      ) : null}
+      <p className={styles.note}>
+        Reduced motion is on, so this stays on the final frame. Use the step
+        buttons to move through the story without animation.
+      </p>
       <noscript>
         <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-fd-muted-foreground">
           {STEPS.map((item) => (

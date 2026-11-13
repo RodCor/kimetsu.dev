@@ -272,6 +272,7 @@
 }
 
 .note {
+  display: none;
   margin: 0.75rem 0 0;
   color: var(--color-fd-muted-foreground);
   font-size: 0.75rem;
@@ -355,8 +356,12 @@
     transition: none;
   }
 
-  .live {
+  .root[data-reduced="true"] .live {
     display: none;
+  }
+
+  .note {
+    display: block;
   }
 
   .stepLayer {
