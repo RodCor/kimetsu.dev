@@ -19,9 +19,11 @@ export function BenchmarkResults() {
       </div>
       <div className="grid overflow-hidden rounded-2xl border border-fd-border lg:grid-cols-3">
         <article className="flex flex-col bg-fd-primary/5 p-6 sm:p-8">
-          <h3 className="font-mono text-sm font-semibold">BEAM 100K</h3>
+          <h3 className="km-text-sm font-mono leading-5 font-semibold">
+            BEAM 100K
+          </h3>
           <p className="km-benchmark-score text-fd-primary">73.3%</p>
-          <p className="text-sm text-fd-muted-foreground">
+          <p className="km-text-sm leading-5 text-fd-muted-foreground">
             Accuracy · 400 probes · 20 conversations
           </p>
           <div
@@ -30,7 +32,7 @@ export function BenchmarkResults() {
             aria-label="BEAM 100K accuracy on the same 400 probes: Kimetsu with graph retrieval, 73.3 percent; flat retrieval baseline, 62.3 percent. Bars use a zero to 100 percent scale."
           >
             <div aria-hidden>
-              <p className="mb-2 text-xs font-medium">
+              <p className="km-text-xs mb-2 leading-4 font-medium">
                 Kimetsu · graph retrieval
               </p>
               <div className="h-2 rounded-full bg-fd-primary/10">
@@ -38,7 +40,7 @@ export function BenchmarkResults() {
               </div>
             </div>
             <div aria-hidden>
-              <div className="mb-2 flex justify-between gap-3 text-xs text-fd-muted-foreground">
+              <div className="km-text-xs mb-2 flex justify-between gap-3 leading-4 text-fd-muted-foreground">
                 <span>Flat retrieval baseline</span>
                 <span className="font-mono tabular-nums">62.3%</span>
               </div>
@@ -47,7 +49,7 @@ export function BenchmarkResults() {
               </div>
             </div>
           </div>
-          <p className="mt-4 text-xs leading-5 text-fd-muted-foreground">
+          <p className="km-text-xs mt-4 leading-5 text-fd-muted-foreground">
             Both runs use the same test set.
           </p>
           <Link
@@ -58,12 +60,14 @@ export function BenchmarkResults() {
           </Link>
         </article>
         <article className="flex flex-col border-t border-fd-border p-6 sm:p-8 lg:border-t-0 lg:border-l">
-          <h3 className="font-mono text-sm font-semibold">LoCoMo</h3>
+          <h3 className="km-text-sm font-mono leading-5 font-semibold">
+            LoCoMo
+          </h3>
           <p className="km-benchmark-score">89.4%</p>
-          <p className="text-sm text-fd-muted-foreground">
+          <p className="km-text-sm leading-5 text-fd-muted-foreground">
             Accuracy · 1,540 questions
           </p>
-          <p className="mt-6 text-sm leading-6 text-fd-muted-foreground">
+          <p className="km-text-sm mt-6 leading-6 text-fd-muted-foreground">
             Questions about facts, events, and relationships across long
             conversations.
           </p>
@@ -75,12 +79,14 @@ export function BenchmarkResults() {
           </Link>
         </article>
         <article className="flex flex-col border-t border-fd-border p-6 sm:p-8 lg:border-t-0 lg:border-l">
-          <h3 className="font-mono text-sm font-semibold">LongMemEval S</h3>
+          <h3 className="km-text-sm font-mono leading-5 font-semibold">
+            LongMemEval S
+          </h3>
           <p className="km-benchmark-score">83.0%</p>
-          <p className="text-sm text-fd-muted-foreground">
+          <p className="km-text-sm leading-5 text-fd-muted-foreground">
             Accuracy · 200-question stratified slice
           </p>
-          <p className="mt-6 text-sm leading-6 text-fd-muted-foreground">
+          <p className="km-text-sm mt-6 leading-6 text-fd-muted-foreground">
             Sampled from the 500-question set, covering recall, changed facts,
             and reasoning across sessions.
           </p>
@@ -92,7 +98,7 @@ export function BenchmarkResults() {
           </Link>
         </article>
       </div>
-      <p className="mt-4 max-w-4xl text-xs leading-5 text-fd-muted-foreground">
+      <p className="km-text-xs mt-4 max-w-4xl leading-5 text-fd-muted-foreground">
         Historical results from the linked runs. An LLM answers and grades the
         questions; the memory pipeline uses local search, embeddings, and
         reranking, with no LLM calls.

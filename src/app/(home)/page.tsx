@@ -13,11 +13,11 @@ export default function HomePage() {
         <div className="mx-auto max-w-3xl text-center">
           <h1
             id="home-title"
-            className="font-mono text-[2.25rem] leading-[1.15] font-semibold tracking-[-0.055em] sm:text-5xl lg:text-[3.5rem]"
+            className="km-text-display font-mono leading-[1.15] font-semibold tracking-[-0.055em]"
           >
             Persistent memory for coding agents.
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-fd-muted-foreground">
+          <p className="km-text-lg mx-auto mt-5 max-w-2xl leading-8 text-fd-muted-foreground">
             Keep project decisions, conventions, and fixes between sessions.
             Kimetsu stores them locally and retrieves the context your agent
             needs.
@@ -35,10 +35,12 @@ export default function HomePage() {
       <NetworkSection />
       <BenchmarkResults />
       <QuickStart />
-      <footer className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8 text-sm">
+      <footer className="km-text-sm mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8 leading-5">
         <AboutContact />
         <div className="flex flex-col justify-between gap-5 border-t border-fd-border pt-6 sm:flex-row sm:items-center">
-          <p className="font-mono font-semibold">Kimetsu</p>
+          <p className="km-text-sm font-mono leading-5 font-semibold">
+            Kimetsu
+          </p>
           <nav aria-label="Footer" className="flex flex-wrap gap-5">
             <a href="#about" className="km-text-link">
               About
