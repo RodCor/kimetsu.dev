@@ -2,6 +2,27 @@ import Link from "next/link";
 
 // Published runs: content/docs/memory-benchmark/{beam,index,longmemeval}.mdx.
 // Keep sample sizes beside the scores; these are separate benchmark protocols.
+// Owner-approved homepage figures only. Full tables live on /docs/network/results.
+const GAINS = [
+  {
+    value: "1.77x",
+    label: "One Kimetsu brain",
+    detail:
+      "Better answers than no memory (+77%; Qwen 7B on LoCoMo, 40.3 vs 22.8).",
+  },
+  {
+    value: "22% to 65%",
+    label: "As a network",
+    detail:
+      "Each agent answers better with merged memory than with only its own (Qwen 7B and 0.5B, LoCoMo and LongMemEval).",
+  },
+  {
+    value: "about 99%",
+    label: "Over QUIC between machines",
+    detail: "Of the gain kept (7B LoCoMo 40.1 vs 40.3).",
+  },
+] as const;
+
 export function BenchmarkResults() {
   return (
     <section
@@ -103,6 +124,34 @@ export function BenchmarkResults() {
         questions; the memory pipeline uses local search, embeddings, and
         reranking, with no LLM calls.
       </p>
+      <div className="mt-10">
+        <h3 className="km-text-lg leading-7 font-semibold">Kimetsu Network</h3>
+        <div className="mt-4 grid gap-4 lg:grid-cols-3">
+          {GAINS.map((gain) => (
+            <article
+              key={gain.label}
+              className="rounded-2xl border border-fd-border p-4"
+            >
+              <p className="km-text-xl font-mono leading-8 font-semibold tracking-tight text-fd-primary">
+                {gain.value}
+              </p>
+              <p className="km-text-sm mt-2 leading-5 font-medium">
+                {gain.label}
+              </p>
+              <p className="km-text-xs mt-2 leading-5 text-fd-muted-foreground">
+                {gain.detail}
+              </p>
+            </article>
+          ))}
+        </div>
+        <p className="km-text-xs mt-4 max-w-4xl leading-5 text-fd-muted-foreground">
+          Token F1 on LoCoMo (answerable questions) and LongMemEval (proxy F1,
+          not the official judge). QUIC measured on one machine over loopback.{" "}
+          <Link href="/docs/network/results" className="km-text-link">
+            Tables and caveats
+          </Link>
+        </p>
+      </div>
     </section>
   );
 }

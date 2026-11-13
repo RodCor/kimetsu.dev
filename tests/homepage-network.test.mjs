@@ -6,6 +6,13 @@ const section = await readFile(
   new URL("../src/app/(home)/_components/network-section.tsx", import.meta.url),
   "utf8",
 );
+const benchmarks = await readFile(
+  new URL(
+    "../src/app/(home)/_components/benchmark-results.tsx",
+    import.meta.url,
+  ),
+  "utf8",
+);
 const page = await readFile(
   new URL("../src/app/(home)/page.tsx", import.meta.url),
   "utf8",
@@ -32,18 +39,38 @@ test("places the network section under the hero and before benchmarks", () => {
   assert.match(section, /href="\/docs\/network"/);
 });
 
-test("uses only the three approved homepage figures", () => {
-  assert.match(section, /1\.77x/);
-  assert.match(section, /\+77%/);
-  assert.match(section, /40\.3 vs 22\.8/);
-  assert.match(section, /22% to 65%/);
-  assert.match(section, /about 99%/);
-  assert.match(section, /40\.1 vs 40\.3/);
+test("renders the three network figures inside benchmarks, not the network section", () => {
+  const start = benchmarks.indexOf('id="benchmarks"');
+  const end = benchmarks.indexOf("</section>", start);
+  assert.ok(start >= 0 && end > start);
+  const block = benchmarks.slice(start, end);
+  const h2 = block.indexOf("Benchmark results");
+  const singleBrain = block.indexOf("BEAM 100K");
+  const networkLabel = block.search(/>\s*Kimetsu Network\s*</);
+  const gainsMap = block.indexOf("{GAINS.map");
+  assert.ok(
+    h2 >= 0 &&
+      singleBrain > h2 &&
+      networkLabel > singleBrain &&
+      gainsMap > networkLabel,
+  );
+  assert.match(block, /<h2[^>]*>\s*Benchmark results\s*<\/h2>/);
+  assert.match(block, /<h3[^>]*>\s*Kimetsu Network\s*<\/h3>/);
+  for (const figure of ["1.77x", "22% to 65%", "about 99%"]) {
+    assert.equal(benchmarks.split(figure).length - 1, 1, figure);
+    assert.equal(section.includes(figure), false, figure);
+  }
+  assert.match(benchmarks, /\+77%/);
+  assert.match(benchmarks, /40\.3 vs 22\.8/);
+  assert.match(benchmarks, /40\.1 vs 40\.3/);
   assert.match(
-    section,
+    block,
     /Token F1 on LoCoMo \(answerable questions\) and LongMemEval \(proxy F1,\s+not the official judge\)\. QUIC measured on one machine over loopback\./,
   );
-  assert.match(section, /href="\/docs\/network\/results"/);
+  assert.match(block, /href="\/docs\/network\/results"/);
+  assert.match(block, /Tables and caveats/);
+  assert.equal(section.includes("Tables and caveats"), false);
+  assert.equal(section.includes('href="/docs/network/results"'), false);
   for (const banned of [
     "+17.5",
     "+13.6",
@@ -57,6 +84,7 @@ test("uses only the three approved homepage figures", () => {
     "31.8",
     "38.9",
   ]) {
+    assert.equal(block.includes(banned), false, banned);
     assert.equal(section.includes(banned), false, banned);
   }
 });
