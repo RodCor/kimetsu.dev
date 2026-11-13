@@ -12,7 +12,7 @@ export function AboutContact() {
         <h2 id="about-title" className="sr-only">
           About Kimetsu
         </h2>
-        <p className="max-w-2xl leading-6 text-fd-muted-foreground">
+        <p className="km-text-sm max-w-2xl leading-6 text-fd-muted-foreground">
           Created and maintained by{" "}
           <span className="font-medium text-fd-foreground">
             Rodrigo Córdoba
@@ -36,7 +36,7 @@ export function AboutContact() {
         <h2 id="contact-title" className="sr-only">
           Contact
         </h2>
-        <p className="max-w-md leading-6 text-fd-muted-foreground">
+        <p className="km-text-sm max-w-md leading-6 text-fd-muted-foreground">
           For questions, feedback, or collaboration, contact Rodrigo on{" "}
           <a
             href={links.linkedin}

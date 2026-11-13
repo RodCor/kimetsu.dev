@@ -44,7 +44,7 @@ export function BrainSharing() {
           >
             <item.icon aria-hidden className="mb-3 size-5 text-fd-primary" />
             <h3 className="mb-2 font-semibold">{item.title}</h3>
-            <p className="text-sm leading-6 text-fd-muted-foreground">
+            <p className="km-text-sm leading-6 text-fd-muted-foreground">
               {item.body}
             </p>
           </div>
