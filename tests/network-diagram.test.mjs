@@ -66,6 +66,18 @@ test("mounts reduced-motion step layers only after the preference is known", () 
   );
 });
 
+test("uses type scale tokens for the 13px and 15px labels and keeps step buttons at 14px", () => {
+  assert.equal(css.includes("0.8125rem"), false);
+  assert.equal(css.includes("0.9375rem"), false);
+  assert.equal(/\b13px\b/.test(css), false);
+  assert.equal(/\b15px\b/.test(css), false);
+  assert.match(css, /\.kicker \{[^}]*font-size: var\(--km-text-sm\);/s);
+  assert.match(css, /\.meta \{[^}]*font-size: var\(--km-text-xs\);/s);
+  assert.match(css, /\.chip \{[^}]*font-size: var\(--km-text-xs\);/s);
+  assert.match(css, /\.step \{[^}]*font-size: 0\.875rem;/s);
+  assert.match(css, /\.note \{[^}]*font-size: 0\.75rem;/s);
+});
+
 test("crossfades reduced-motion step changes with opacity only", () => {
   assert.match(diagram, /styles\.stepLayer/);
   assert.equal(diagram.includes("if (reduced) return"), false);
