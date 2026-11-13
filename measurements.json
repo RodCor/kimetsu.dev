@@ -1,0 +1,40 @@
+{
+  "heightsPx": {
+    "method": "Playwright Chromium, deviceScaleFactor 1, default motion, color scheme dark. Page height is document.documentElement.scrollHeight. Section height is getBoundingClientRect().height.",
+    "1440x900": {
+      "before": { "page": 3202, "network": 1540, "benchmarks": 611 },
+      "after": { "page": 3202, "network": 1236, "benchmarks": 915 }
+    },
+    "390x844": {
+      "before": { "page": 5578, "network": 2932, "benchmarks": 1174 },
+      "after": { "page": 5578, "network": 2292, "benchmarks": 1814 }
+    }
+  },
+  "grepOutIndexHtml": {
+    "1.77x": { "file": 2, "renderedMarkup": 1, "networkSection": 0, "benchmarksSection": 1 },
+    "22% to 65%": { "file": 2, "renderedMarkup": 1, "networkSection": 0, "benchmarksSection": 1 },
+    "about 99%": { "file": 2, "renderedMarkup": 1, "networkSection": 0, "benchmarksSection": 1 },
+    "note": "The second file hit is the Next.js flight payload copy of the same text node."
+  },
+  "axe": {
+    "beforeViolations": { "1440x900": 0, "390x844": 0 },
+    "afterViolations": { "1440x900": 0, "390x844": 0 },
+    "newRuleIds": []
+  },
+  "lighthouse": {
+    "version": "13.6.0",
+    "chrome": "Google Chrome 157.0.8103.50",
+    "hostUserAgent": "HeadlessChrome/157.0.0.0",
+    "formFactor": "mobile",
+    "throttlingMethod": "simulate",
+    "screenEmulation": { "mobile": true, "width": 412, "height": 823, "deviceScaleFactor": 1.75 },
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "cpuSlowdownMultiplier": 4
+    },
+    "beforeMedian": { "score": 100, "lcpMs": 907.5992, "tbtMs": 91.5, "cls": 0 },
+    "afterMedian": { "score": 100, "lcpMs": 908.1224, "tbtMs": 90.5, "cls": 0 },
+    "lcpElement": "section#network > div.grid > div > p.km-text-md"
+  }
+}
