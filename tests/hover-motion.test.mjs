@@ -7,7 +7,10 @@ const globalCss = await readFile(
   "utf8",
 );
 const projects = await readFile(
-  new URL("../src/app/(home)/_components/projects-section.tsx", import.meta.url),
+  new URL(
+    "../src/app/(home)/_components/projects-section.tsx",
+    import.meta.url,
+  ),
   "utf8",
 );
 const diagramCss = await readFile(
@@ -88,9 +91,9 @@ test("points project-card hovers at the shared tokens", () => {
 });
 
 test("limits motion transitions to paint properties and keeps reduced motion", () => {
-  const declarations = [
-    ...globalCss.matchAll(/transition:\s*([^;]+);/g),
-  ].map((match) => match[1]);
+  const declarations = [...globalCss.matchAll(/transition:\s*([^;]+);/g)].map(
+    (match) => match[1],
+  );
   assert.ok(declarations.length >= 2);
   for (const declaration of declarations) {
     const body = declaration.replace(/\s*!important\s*/g, " ").trim();
