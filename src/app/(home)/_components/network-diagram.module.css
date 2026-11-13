@@ -91,12 +91,12 @@
   background: var(--color-fd-primary);
 }
 
-.root[data-step="2"] .mover {
+.track[data-step="2"] .mover {
   transform: translate3d(0, calc(33.333% + var(--nudge)), 0);
 }
 
-.root[data-step="3"] .mover,
-.root[data-step="4"] .mover {
+.track[data-step="3"] .mover,
+.track[data-step="4"] .mover {
   transform: translate3d(0, calc(66.666% + var(--nudge)), 0);
 }
 
@@ -134,10 +134,10 @@
   transition: transform var(--nh-dur-out) ease-in;
 }
 
-.root[data-step="1"] .brainBar,
-.root[data-step="2"] .brainBar,
-.root[data-step="3"] .brainBar,
-.root[data-step="4"] .brainBar {
+.track[data-step="1"] .brainBar,
+.track[data-step="2"] .brainBar,
+.track[data-step="3"] .brainBar,
+.track[data-step="4"] .brainBar {
   transform: scaleX(1);
   transition: transform var(--nh-dur-in) var(--nh-ease-out);
 }
@@ -178,32 +178,32 @@
   grid-row: 3;
 }
 
-.root[data-step="0"] .lesson {
+.track[data-step="0"] .lesson {
   opacity: 1;
   transition: opacity var(--nh-dur-in) var(--nh-ease-out);
 }
 
-.root[data-step="2"] .packNet,
-.root[data-step="2"] .seal {
+.track[data-step="2"] .packNet,
+.track[data-step="2"] .seal {
   opacity: 1;
   transition: opacity var(--nh-dur-in) var(--nh-ease-out) var(--nh-dur-in);
 }
 
-.root[data-step="3"] .seal,
-.root[data-step="4"] .seal {
+.track[data-step="3"] .seal,
+.track[data-step="4"] .seal {
   opacity: 1;
   transition: opacity var(--nh-dur-in) var(--nh-ease-out);
 }
 
-.root[data-step="3"] .packB,
-.root[data-step="4"] .packB,
-.root[data-step="3"] .request {
+.track[data-step="3"] .packB,
+.track[data-step="4"] .packB,
+.track[data-step="3"] .request {
   opacity: 1;
   transition: opacity var(--nh-dur-in) var(--nh-ease-out) var(--nh-dur-in);
 }
 
-.root[data-step="4"] .answer,
-.root[data-step="4"] .cite {
+.track[data-step="4"] .answer,
+.track[data-step="4"] .cite {
   opacity: 1;
   transition: opacity var(--nh-dur-in) var(--nh-ease-out);
 }
@@ -252,15 +252,13 @@
   cursor: pointer;
 }
 
-.play[aria-disabled="true"],
-.play[aria-disabled="true"]:hover,
-.play[aria-disabled="true"]:active,
-.play[aria-disabled="true"]:focus,
-.play[aria-disabled="true"]:focus-visible {
-  border-color: var(--color-fd-border);
-  background: var(--color-fd-background);
-  color: var(--color-fd-muted-foreground);
-  cursor: not-allowed;
+.play {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+
+.stepLayer {
+  display: none;
 }
 
 .step[aria-current="step"] {
@@ -274,6 +272,7 @@
 }
 
 .note {
+  display: none;
   margin: 0.75rem 0 0;
   color: var(--color-fd-muted-foreground);
   font-size: 0.75rem;
@@ -336,12 +335,12 @@
     transform: translate3d(calc(16.666% - var(--dot) / 2), 0, 0);
   }
 
-  .root[data-step="2"] .mover {
+  .track[data-step="2"] .mover {
     transform: translate3d(calc(50% - var(--dot) / 2), 0, 0);
   }
 
-  .root[data-step="3"] .mover,
-  .root[data-step="4"] .mover {
+  .track[data-step="3"] .mover,
+  .track[data-step="4"] .mover {
     transform: translate3d(calc(83.333% - var(--dot) / 2), 0, 0);
   }
 
@@ -355,5 +354,32 @@
   .chip,
   .brainBar {
     transition: none;
+  }
+
+  .root[data-reduced="true"] .live {
+    display: none;
+  }
+
+  .note {
+    display: block;
+  }
+
+  .stepLayer {
+    position: absolute;
+    inset: 0;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Overrides the homepage reduced-motion reset for these layers only. */
+  .root .stepLayer {
+    transition: opacity 200ms linear !important;
+  }
+
+  .stepLayer[data-active="true"] {
+    z-index: 1;
+    opacity: 1;
+    pointer-events: auto;
   }
 }
