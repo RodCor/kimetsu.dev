@@ -34,6 +34,61 @@ const STEPS = [
   },
 ] as const;
 
+function DiagramTrack({
+  step,
+  className,
+}: {
+  step: number;
+  className?: string;
+}) {
+  return (
+    <div
+      className={[styles.track, className].filter(Boolean).join(" ")}
+      data-step={step}
+    >
+      <span className={styles.spine} />
+      <span className={styles.stations}>
+        <span />
+        <span />
+        <span />
+      </span>
+      <span className={styles.mover} data-signal="">
+        <span className={styles.dot} />
+      </span>
+      <div className={styles.node}>
+        <p className={styles.kicker}>Agent A</p>
+        <p className={styles.meta}>Machine A</p>
+        <p className={styles.meta}>
+          Brain A
+          <span className={styles.brainBar} />
+        </p>
+        <div className={styles.status}>
+          <p className={`${styles.chip} ${styles.lesson}`}>lesson</p>
+        </div>
+      </div>
+      <div className={styles.node}>
+        <p className={styles.kicker}>Network</p>
+        <p className={styles.meta}>Shared</p>
+        <div className={styles.status}>
+          <p className={`${styles.chip} ${styles.packNet}`}>pack</p>
+          <p className={`${styles.chip} ${styles.seal}`}>signed, scrubbed</p>
+        </div>
+      </div>
+      <div className={styles.node}>
+        <p className={styles.kicker}>Agent B</p>
+        <p className={styles.meta}>Machine B</p>
+        <p className={styles.meta}>Brain B</p>
+        <div className={styles.status}>
+          <p className={`${styles.chip} ${styles.packB}`}>pack</p>
+          <p className={`${styles.chip} ${styles.request}`}>request</p>
+          <p className={`${styles.chip} ${styles.answer}`}>answer</p>
+          <p className={`${styles.chip} ${styles.cite}`}>cited memory</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function NetworkDiagram({
   loopMs,
   motionQuery,
@@ -81,7 +136,7 @@ export function NetworkDiagram({
   }, [instant]);
 
   useEffect(() => {
-    if (!playing || reduced) return;
+    if (!playing) return;
     const total = STEP_MS.reduce((sum, ms) => sum + ms, 0);
     const dwell = (STEP_MS[step] * loopMs) / total;
     const id = window.setTimeout(() => {
@@ -89,7 +144,7 @@ export function NetworkDiagram({
       setStep((step + 1) % STEPS.length);
     }, dwell);
     return () => window.clearTimeout(id);
-  }, [playing, reduced, step, loopMs]);
+  }, [playing, step, loopMs]);
 
   function showStep(index: number) {
     if (Math.abs(index - step) > 1) setInstant(true);
@@ -98,63 +153,28 @@ export function NetworkDiagram({
   }
 
   function togglePlay() {
-    if (reduced) return;
     setPlaying((value) => !value);
   }
 
   return (
     <div
       className={`${styles.root} mt-8 rounded-2xl border border-fd-border bg-fd-card p-4 sm:p-5`}
-      data-step={step}
       data-instant={instant ? "true" : "false"}
     >
       <p className="sr-only">
         How Kimetsu Network moves a lesson from Agent A to Agent B
       </p>
       <div className={styles.stage} aria-hidden="true">
-        <div className={styles.track}>
-          <span className={styles.spine} />
-          <span className={styles.stations}>
-            <span />
-            <span />
-            <span />
-          </span>
-          <span className={styles.mover} data-signal="">
-            <span className={styles.dot} />
-          </span>
-          <div className={styles.node}>
-            <p className={styles.kicker}>Agent A</p>
-            <p className={styles.meta}>Machine A</p>
-            <p className={styles.meta}>
-              Brain A
-              <span className={styles.brainBar} />
-            </p>
-            <div className={styles.status}>
-              <p className={`${styles.chip} ${styles.lesson}`}>lesson</p>
-            </div>
+        <DiagramTrack step={step} className={styles.live} />
+        {STEPS.map((item, index) => (
+          <div
+            key={item.title}
+            className={styles.stepLayer}
+            data-active={index === step ? "true" : undefined}
+          >
+            <DiagramTrack step={index} />
           </div>
-          <div className={styles.node}>
-            <p className={styles.kicker}>Network</p>
-            <p className={styles.meta}>Shared</p>
-            <div className={styles.status}>
-              <p className={`${styles.chip} ${styles.packNet}`}>pack</p>
-              <p className={`${styles.chip} ${styles.seal}`}>
-                signed, scrubbed
-              </p>
-            </div>
-          </div>
-          <div className={styles.node}>
-            <p className={styles.kicker}>Agent B</p>
-            <p className={styles.meta}>Machine B</p>
-            <p className={styles.meta}>Brain B</p>
-            <div className={styles.status}>
-              <p className={`${styles.chip} ${styles.packB}`}>pack</p>
-              <p className={`${styles.chip} ${styles.request}`}>request</p>
-              <p className={`${styles.chip} ${styles.answer}`}>answer</p>
-              <p className={`${styles.chip} ${styles.cite}`}>cited memory</p>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
       <p
         id="network-how-caption"
@@ -176,9 +196,8 @@ export function NetworkDiagram({
         <fieldset aria-label="Animation playback" className={styles.playback}>
           <button
             type="button"
-            className={`${styles.play} km-button-primary`}
+            className={`${styles.play} km-button-secondary`}
             onClick={togglePlay}
-            aria-disabled={reduced}
             aria-pressed={playing}
           >
             {playing ? (
