@@ -241,8 +241,8 @@ export function NetworkDiagram({
         </fieldset>
       </div>
       <p className={styles.note}>
-        Reduced motion is on, so this stays on the final frame. Use the step
-        buttons to move through the story without animation.
+        Reduced motion is on, so steps fade in place instead of moving. Use Play
+        or the step buttons to move through the story.
       </p>
       <noscript>
         <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm leading-6 text-fd-muted-foreground">

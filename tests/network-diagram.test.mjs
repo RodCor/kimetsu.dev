@@ -33,8 +33,8 @@ test("keeps the diagram copy, labels, and control order", () => {
     "How Kimetsu Network moves a lesson from Agent A to Agent B",
     "Animation playback",
     "Animation steps",
-    "Reduced motion is on, so this stays on the final frame. Use the step",
-    "buttons to move through the story without animation.",
+    "Reduced motion is on, so steps fade in place instead of moving. Use Play",
+    "or the step buttons to move through the story.",
   ]) {
     assert.ok(diagram.includes(text), text);
   }
