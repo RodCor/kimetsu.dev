@@ -13,6 +13,9 @@
   --color-fd-primary: #126c33;
   --color-fd-primary-foreground: #ffffff;
   --color-fd-muted-foreground: #626262;
+  /* Same ease-out curve as the network diagram's --nh-ease-out. */
+  --km-dur-fast: 150ms;
+  --km-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark {
@@ -126,8 +129,8 @@ html {
   font-weight: 500;
   cursor: pointer;
   transition:
-    background-color 150ms,
-    border-color 150ms;
+    background-color var(--km-dur-fast) var(--km-ease-out),
+    border-color var(--km-dur-fast) var(--km-ease-out);
 }
 
 .km-button-primary {
