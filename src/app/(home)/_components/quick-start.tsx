@@ -43,7 +43,7 @@ export function QuickStart() {
           <h2 id="setup-title" className="km-heading">
             Install Kimetsu
           </h2>
-          <p className="mt-4 max-w-md text-fd-muted-foreground">
+          <p className="km-text-md mt-4 max-w-md text-fd-muted-foreground">
             Select your agent and run these commands from your project
             directory. Available for Linux, macOS, and Windows.
           </p>
@@ -54,7 +54,10 @@ export function QuickStart() {
         <div className="min-w-0 rounded-2xl border border-fd-border bg-fd-card">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-fd-border p-4">
             <div className="flex items-center gap-3">
-              <label htmlFor="setup-host" className="text-sm font-medium">
+              <label
+                htmlFor="setup-host"
+                className="km-text-sm leading-5 font-medium"
+              >
                 Your agent
               </label>
               <select
@@ -65,7 +68,7 @@ export function QuickStart() {
                   setHost(event.target.value);
                   setFeedback({ command: "", ok: false });
                 }}
-                className="min-h-11 rounded-lg border border-fd-border bg-fd-background px-3 text-sm text-fd-foreground"
+                className="km-text-sm min-h-11 rounded-lg border border-fd-border bg-fd-background px-3 text-fd-foreground"
               >
                 {hosts.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -87,10 +90,10 @@ export function QuickStart() {
               {currentFeedback && feedback.ok ? "Copied" : "Copy commands"}
             </button>
           </div>
-          <pre className="whitespace-pre-wrap break-words p-5 text-sm leading-8 sm:text-base">
+          <pre className="km-install-command whitespace-pre-wrap break-words p-5 leading-8">
             <code translate="no">{command}</code>
           </pre>
-          <div className="border-t border-fd-border px-5 py-3 text-xs leading-5 text-fd-muted-foreground">
+          <div className="km-text-xs border-t border-fd-border px-5 py-3 leading-5 text-fd-muted-foreground">
             <p>
               Requires npm. Installs the lean build; local semantic models are
               optional.
@@ -104,7 +107,7 @@ export function QuickStart() {
             </p>
           </div>
           <noscript>
-            <p className="px-5 pb-4 text-sm">
+            <p className="km-text-sm px-5 pb-4 leading-5">
               For other agents, use the{" "}
               <a className="underline" href="/docs/install/">
                 installation guide

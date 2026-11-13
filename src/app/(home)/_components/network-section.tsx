@@ -55,7 +55,7 @@ export function NetworkSection() {
           <h2 id="network-title" className="km-heading">
             One shared memory network your agents plug into.
           </h2>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-fd-muted-foreground">
+          <p className="km-text-md mt-4 max-w-2xl leading-7 text-fd-muted-foreground">
             The same project lessons follow you from machine to machine, in Grok
             Bot, Codex, Claude Code, Cursor, and the Pi package. Each machine
             keeps its own local SQLite brain and exchanges a signed, scrubbed
@@ -79,19 +79,19 @@ export function NetworkSection() {
         {FLOW.map((item, index) => (
           <li key={item.title} className="border-t border-fd-border pt-5">
             <span
-              className="mb-3 block font-mono text-sm text-fd-primary"
+              className="km-text-sm mb-3 block font-mono leading-5 text-fd-primary"
               aria-hidden
             >
               0{index + 1}
             </span>
-            <h3 className="text-lg font-semibold">{item.title}</h3>
+            <h3 className="km-text-lg leading-7 font-semibold">{item.title}</h3>
             <code
               translate="no"
-              className="mt-3 block font-mono text-sm leading-6 break-words"
+              className="km-text-sm mt-3 block font-mono leading-6 break-words"
             >
               {item.command}
             </code>
-            <p className="mt-2 text-sm leading-6 text-fd-muted-foreground">
+            <p className="km-text-sm mt-2 leading-6 text-fd-muted-foreground">
               {item.detail}
             </p>
           </li>
@@ -99,24 +99,28 @@ export function NetworkSection() {
       </ol>
 
       <div className="mt-10">
-        <h3 className="text-lg font-semibold">What Kimetsu adds</h3>
+        <h3 className="km-text-lg leading-7 font-semibold">
+          What Kimetsu adds
+        </h3>
         <div className="mt-4 grid gap-4 lg:grid-cols-3">
           {GAINS.map((gain) => (
             <article
               key={gain.value + gain.label}
               className="rounded-2xl border border-fd-border p-4"
             >
-              <p className="font-mono text-2xl font-semibold tracking-tight text-fd-primary">
+              <p className="km-text-xl font-mono leading-8 font-semibold tracking-tight text-fd-primary">
                 {gain.value}
               </p>
-              <p className="mt-2 text-sm font-medium">{gain.label}</p>
-              <p className="mt-2 text-xs leading-5 text-fd-muted-foreground">
+              <p className="km-text-sm mt-2 leading-5 font-medium">
+                {gain.label}
+              </p>
+              <p className="km-text-xs mt-2 leading-5 text-fd-muted-foreground">
                 {gain.detail}
               </p>
             </article>
           ))}
         </div>
-        <p className="mt-4 max-w-4xl text-xs leading-5 text-fd-muted-foreground">
+        <p className="km-text-xs mt-4 max-w-4xl leading-5 text-fd-muted-foreground">
           Token F1 on LoCoMo (answerable questions) and LongMemEval (proxy F1,
           not the official judge). QUIC measured on one machine over loopback.{" "}
           <Link href="/docs/network/results" className="km-text-link">
@@ -131,22 +135,22 @@ export function NetworkSection() {
         </a>
       </p>
 
-      <div className="mt-8 max-w-3xl text-sm leading-6 text-fd-muted-foreground">
+      <div className="km-text-sm mt-8 max-w-3xl leading-6 text-fd-muted-foreground">
         <p>
           v2.11.0 prebuilt and npm binaries include{" "}
-          <code translate="no" className="font-mono text-xs">
+          <code translate="no" className="km-text-xs font-mono leading-4">
             kimetsu network
           </code>
           .{" "}
-          <code translate="no" className="font-mono text-xs">
+          <code translate="no" className="km-text-xs font-mono leading-4">
             cargo install kimetsu-cli
           </code>{" "}
           still needs{" "}
-          <code translate="no" className="font-mono text-xs">
+          <code translate="no" className="km-text-xs font-mono leading-4">
             --features network
           </code>
           . Relay is off, and router port mapping stays off unless you pass{" "}
-          <code translate="no" className="font-mono text-xs">
+          <code translate="no" className="km-text-xs font-mono leading-4">
             --map-ports
           </code>
           . This is not Kimetsu Remote, and Claude Desktop has no installer. The
