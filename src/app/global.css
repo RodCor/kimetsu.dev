@@ -29,6 +29,10 @@ html {
 /* Home: readable static content, compact controls, and a visible keyboard path. */
 .km-home {
   min-width: 0;
+  /* Shared block padding for homepage sections.
+     3.5rem (56px) is Tailwind spacing-14, the previous desktop section padding.
+     At the mobile breakpoint this becomes 3rem (48px, spacing-12). */
+  --km-section-gap: 3.5rem;
 }
 
 .km-home :is(h1, h2, h3) {
@@ -61,7 +65,8 @@ html {
 }
 
 .km-hero {
-  padding: 3.5rem 1.5rem 2.5rem;
+  padding-block: var(--km-section-gap);
+  padding-inline: 1.5rem;
   background-image: radial-gradient(
     var(--color-fd-border) 0.7px,
     transparent 0.7px
@@ -72,12 +77,9 @@ html {
 .km-section {
   max-width: 72rem;
   margin-inline: auto;
-  padding: 3.5rem 1.5rem;
+  padding-block: var(--km-section-gap);
+  padding-inline: 1.5rem;
   border-bottom: 1px solid var(--color-fd-border);
-}
-
-.km-benchmarks {
-  padding-top: 1.5rem;
 }
 
 .km-benchmark-score {
@@ -160,16 +162,13 @@ html {
 }
 
 @media (max-width: 639px) {
-  .km-hero {
-    padding: 3rem 1.25rem;
+  .km-home {
+    --km-section-gap: 3rem;
   }
 
+  .km-hero,
   .km-section {
-    padding: 3rem 1.25rem;
-  }
-
-  .km-benchmarks {
-    padding-top: 0.5rem;
+    padding-inline: 1.25rem;
   }
 
   .km-home table :is(th, td) {
