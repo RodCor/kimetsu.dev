@@ -36,7 +36,7 @@ export function BenchmarkResults() {
         </h2>
         <Link
           href="/docs/memory-benchmark"
-          className="km-text-link inline-flex min-h-[24px] items-center"
+          className="km-text-link km-text-link-target"
         >
           All results and methodology →
         </Link>

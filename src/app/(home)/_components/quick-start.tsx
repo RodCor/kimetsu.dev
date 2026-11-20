@@ -49,7 +49,7 @@ export function QuickStart() {
           </p>
           <Link
             href="/docs/install"
-            className="km-text-link mt-4 inline-flex min-h-[24px] items-center"
+            className="km-text-link km-text-link-target mt-4"
           >
             All installation options →
           </Link>

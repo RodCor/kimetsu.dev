@@ -1,12 +1,21 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { NetworkDiagram } from "./network-diagram";
 
-const FLOW = [
+const FLOW: readonly {
+  title: string;
+  command: string;
+  detail: ReactNode;
+}[] = [
   {
     title: "Invite",
     command: "kimetsu network invite --name laptop",
-    detail:
-      "A creates the invite. The code starts with knet1. The default name is friends. Nothing is listening yet.",
+    detail: (
+      <>
+        A creates the invite. The code starts with <code>knet1.</code> The
+        default name is friends. Nothing is listening yet.
+      </>
+    ),
   },
   {
     title: "Join",
@@ -19,7 +28,7 @@ const FLOW = [
     detail:
       "A runs share while B runs kimetsu network request. If discovery misses A, pass the peer: line share printed.",
   },
-] as const;
+];
 
 export function NetworkSection() {
   return (
@@ -45,7 +54,7 @@ export function NetworkSection() {
         <div className="flex flex-wrap gap-3 lg:justify-end">
           <Link
             href="/docs/network"
-            className="km-text-link inline-flex min-h-[24px] items-center"
+            className="km-text-link km-text-link-target"
           >
             Read the Network guide
           </Link>
