@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { codeSampleLabel } from "../src/lib/code-sample-label.mjs";
 
 const css = await readFile(
   new URL("../src/app/global.css", import.meta.url),
@@ -16,6 +17,10 @@ const landmarks = await readFile(
 );
 const code = await readFile(
   new URL("../src/components/docs-code.tsx", import.meta.url),
+  "utf8",
+);
+const labelSource = await readFile(
+  new URL("../src/lib/code-sample-label.mjs", import.meta.url),
   "utf8",
 );
 const fumadocsPage = await readFile(
@@ -80,10 +85,49 @@ test("sets docs landmark roles through fumadocs props", () => {
   assert.match(page, /"aria-label":\s*"On this page"/);
   assert.match(page, /"aria-label":\s*"Page sections"/);
   assert.match(page, /pre:\s*DocsPre/);
-  assert.match(
-    code,
-    /viewportProps=\{\{\s*"aria-label":\s*`Code sample \$\{id\}`\s*\}\}/,
+  assert.match(page, /DocsCodeScope/);
+  assert.match(code, /codeSampleLabel\(/);
+  assert.match(code, /usePathname\(\)/);
+  assert.match(code, /viewportProps=\{\{\s*"aria-label":\s*label\s*\}\}/);
+});
+
+test("builds readable code labels without screen-reader id marks", () => {
+  assert.match(labelSource, /\$\{lang\} code \$\{order\}/);
+  assert.match(labelSource, /`Code sample \$\{order\}`/);
+  assert.equal(code.includes("useId"), false);
+  const titled = new Set();
+  assert.equal(
+    codeSampleLabel({
+      title: "Install",
+      language: "bash",
+      order: 1,
+      used: titled,
+    }),
+    "Install",
   );
+  const plain = new Set();
+  assert.equal(
+    codeSampleLabel({ language: "bash", order: 1, used: plain }),
+    "bash code 1",
+  );
+  assert.equal(
+    codeSampleLabel({ language: "json", order: 2, used: plain }),
+    "json code 2",
+  );
+  const untitled = new Set();
+  assert.equal(codeSampleLabel({ order: 1, used: untitled }), "Code sample 1");
+  const noisy = new Set();
+  const cleaned = codeSampleLabel({
+    title: "Note: «read»",
+    order: 1,
+    used: noisy,
+  });
+  assert.equal(cleaned, "Note read");
+  for (const label of [cleaned, "bash code 1", "Code sample 1", "Install"]) {
+    assert.equal(label.includes("«"), false, label);
+    assert.equal(label.includes("»"), false, label);
+    assert.equal(label.includes(":"), false, label);
+  }
 });
 
 test("reapplies the uncovered header role when the docs path changes", () => {

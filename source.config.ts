@@ -1,3 +1,4 @@
+import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins";
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema";
 import { defineConfig, defineDocs } from "fumadocs-mdx/config";
 
@@ -18,6 +19,24 @@ export const docs = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
-    // MDX options
+    rehypeCodeOptions: {
+      ...rehypeCodeDefaultOptions,
+      transformers: [
+        ...(rehypeCodeDefaultOptions.transformers ?? []),
+        {
+          name: "kimetsu-code-language",
+          pre(node) {
+            const lang = this.options.lang;
+            if (typeof lang === "string" && lang.length > 0) {
+              node.properties.dataLanguage = lang;
+            }
+            const title = this.options.meta?.title;
+            if (typeof title === "string" && title.length > 0) {
+              node.properties.dataTitle = title;
+            }
+          },
+        },
+      ],
+    },
   },
 });
