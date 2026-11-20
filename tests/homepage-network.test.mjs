@@ -114,7 +114,7 @@ test("documents the network result tables and links them from the index", () => 
   assert.match(results, /RTX 5060 Ti 16 GB/);
 });
 
-test("does not repeat install commands and links them to get started", () => {
+test("does not repeat install commands in the network section", () => {
   for (const command of [
     "kimetsu plugin install grok-bot",
     "kimetsu plugin install codex",
@@ -124,10 +124,10 @@ test("does not repeat install commands and links them to get started", () => {
   ]) {
     assert.equal(section.includes(command), false, command);
   }
-  assert.match(
-    section,
-    /<a href="#get-started" className="km-text-link">\s*Install commands in Get started\s*<\/a>/,
-  );
+  assert.equal(section.includes('href="#get-started"'), false);
+  assert.equal(section.includes("Install commands in Get started"), false);
+  assert.equal(section.includes("v2.11.0"), false);
+  assert.equal(section.includes("/docs/network/security"), false);
   assert.equal(section.includes("km-button-primary"), false);
   for (const command of [
     "kimetsu network invite --name laptop",
