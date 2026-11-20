@@ -23,6 +23,10 @@ const labelSource = await readFile(
   new URL("../src/lib/code-sample-label.mjs", import.meta.url),
   "utf8",
 );
+const sourceConfig = await readFile(
+  new URL("../source.config.ts", import.meta.url),
+  "utf8",
+);
 const fumadocsPage = await readFile(
   new URL(
     "../node_modules/fumadocs-ui/dist/layouts/docs/page/slots/container.js",
@@ -85,10 +89,14 @@ test("sets docs landmark roles through fumadocs props", () => {
   assert.match(page, /"aria-label":\s*"On this page"/);
   assert.match(page, /"aria-label":\s*"Page sections"/);
   assert.match(page, /pre:\s*DocsPre/);
-  assert.match(page, /DocsCodeScope/);
+  assert.equal(page.includes("DocsCodeScope"), false);
   assert.match(code, /codeSampleLabel\(/);
-  assert.match(code, /usePathname\(\)/);
+  assert.match(code, /"data-order":\s*dataOrder/);
   assert.match(code, /viewportProps=\{\{\s*"aria-label":\s*label\s*\}\}/);
+  assert.equal(code.includes("usePathname"), false);
+  assert.equal(code.includes("+="), false);
+  assert.match(sourceConfig, /dataOrder\s*=\s*order/);
+  assert.match(sourceConfig, /stampCodeOrder/);
 });
 
 test("builds readable code labels without screen-reader id marks", () => {
@@ -123,11 +131,19 @@ test("builds readable code labels without screen-reader id marks", () => {
     used: noisy,
   });
   assert.equal(cleaned, "Note read");
-  for (const label of [cleaned, "bash code 1", "Code sample 1", "Install"]) {
+  const built = [
+    cleaned,
+    "bash code 1",
+    "json code 2",
+    "Code sample 1",
+    "Install",
+  ];
+  for (const label of built) {
     assert.equal(label.includes("«"), false, label);
     assert.equal(label.includes("»"), false, label);
     assert.equal(label.includes(":"), false, label);
   }
+  assert.match(sourceConfig, /dataCodeLabel = codeSampleLabel/);
 });
 
 test("reapplies the uncovered header role when the docs path changes", () => {
