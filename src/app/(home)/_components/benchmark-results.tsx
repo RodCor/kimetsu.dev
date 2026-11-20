@@ -34,7 +34,10 @@ export function BenchmarkResults() {
         <h2 id="benchmarks-title" className="km-heading">
           Benchmark results
         </h2>
-        <Link href="/docs/memory-benchmark" className="km-text-link">
+        <Link
+          href="/docs/memory-benchmark"
+          className="km-text-link inline-flex min-h-[24px] items-center"
+        >
           All results and methodology →
         </Link>
       </div>

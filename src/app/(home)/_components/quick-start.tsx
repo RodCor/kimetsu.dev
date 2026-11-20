@@ -47,7 +47,10 @@ export function QuickStart() {
             Select your agent and run these commands from your project
             directory. Available for Linux, macOS, and Windows.
           </p>
-          <Link href="/docs/install" className="km-text-link mt-4 inline-block">
+          <Link
+            href="/docs/install"
+            className="km-text-link mt-4 inline-flex min-h-[24px] items-center"
+          >
             All installation options →
           </Link>
         </div>
