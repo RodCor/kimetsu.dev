@@ -42,19 +42,34 @@ export default function HomePage() {
             Kimetsu
           </p>
           <nav aria-label="Footer" className="flex flex-wrap gap-5">
-            <a href="#about" className="km-text-link">
+            <a
+              href="#about"
+              className="km-text-link inline-flex min-h-[24px] items-center"
+            >
               About
             </a>
-            <a href="#contact" className="km-text-link">
+            <a
+              href="#contact"
+              className="km-text-link inline-flex min-h-[24px] items-center"
+            >
               Contact
             </a>
-            <a href={links.github} className="km-text-link">
+            <a
+              href={links.github}
+              className="km-text-link inline-flex min-h-[24px] items-center"
+            >
               GitHub
             </a>
-            <Link href="/docs/changelog" className="km-text-link">
+            <Link
+              href="/docs/changelog"
+              className="km-text-link inline-flex min-h-[24px] items-center"
+            >
               Changelog
             </Link>
-            <a href="/llms.txt" className="km-text-link">
+            <a
+              href="/llms.txt"
+              className="km-text-link inline-flex min-h-[24px] items-center"
+            >
               For agents
             </a>
           </nav>

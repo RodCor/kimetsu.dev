@@ -6,18 +6,18 @@ const FLOW = [
     title: "Invite",
     command: "kimetsu network invite --name laptop",
     detail:
-      "On machine A, in the repo. Copy the code (it starts with knet1.). The default name is friends. Kimetsu is not listening yet.",
+      "A creates the invite. The code starts with knet1. The default name is friends. Nothing is listening yet.",
   },
   {
     title: "Join",
     command: "kimetsu network join <code>",
-    detail: "On machine B. Membership is saved. Still nothing is listening.",
+    detail: "On B, membership is saved. Nothing is listening.",
   },
   {
     title: "Share, then request",
     command: "kimetsu network share",
     detail:
-      "Leave share running on A. On B: kimetsu network request. If discovery misses A, pass the peer: line share printed.",
+      "A runs share while B runs kimetsu network request. If discovery misses A, pass the peer: line share printed.",
   },
 ] as const;
 
@@ -43,7 +43,10 @@ export function NetworkSection() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3 lg:justify-end">
-          <Link href="/docs/network" className="km-text-link">
+          <Link
+            href="/docs/network"
+            className="km-text-link inline-flex min-h-[24px] items-center"
+          >
             Read the Network guide
           </Link>
         </div>
