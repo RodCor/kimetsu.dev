@@ -25,6 +25,12 @@
   --color-fd-muted-foreground: #a3a3a3;
 }
 
+/* Shiki comment gray #6A737D is 3.65:1 on the dark code background #191919.
+   The token sets the variable inline, so the override has to win that declaration. */
+.dark .shiki span[style*="--shiki-dark:#6A737D"] {
+  --shiki-dark: #8b949e !important;
+}
+
 html {
   scrollbar-gutter: stable;
 }
