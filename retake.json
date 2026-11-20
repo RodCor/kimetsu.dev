@@ -1,0 +1,14 @@
+{
+  "shotsTakenAtHead": "0c49ab86b7b477b39784e05629ad00543e5a9222",
+  "beforeBuild": "origin/main 88b8de68b3cf957be7c1cc55b6250a7eb7be13dd",
+  "comparedWith": "568b9ed02f685b320e7f5b1c24a930c182c94427",
+  "pixelmatchThreshold": 0,
+  "differingPixels": {
+    "full-1440x900.png": 0,
+    "full-390x844.png": 0,
+    "network-1440x900.png": 0,
+    "network-390x844.png": 0,
+    "benchmarks-1440x900.png": 0,
+    "benchmarks-390x844.png": 0
+  }
+}
