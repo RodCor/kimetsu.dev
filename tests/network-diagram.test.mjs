@@ -66,16 +66,30 @@ test("mounts reduced-motion step layers only after the preference is known", () 
   );
 });
 
-test("uses type scale tokens for the 13px and 15px labels and keeps step buttons at 14px", () => {
+test("uses type scale tokens for diagram labels, step buttons, and the reduced-motion note", () => {
   assert.equal(css.includes("0.8125rem"), false);
   assert.equal(css.includes("0.9375rem"), false);
   assert.equal(/\b13px\b/.test(css), false);
   assert.equal(/\b15px\b/.test(css), false);
+  assert.equal(/\b14px\b/.test(css), false);
+  assert.equal(/\b12px\b/.test(css), false);
+  const fontSizes = [...css.matchAll(/font-size:\s*([^;]+);/g)].map((match) =>
+    match[1].trim(),
+  );
+  assert.deepEqual(fontSizes, [
+    "var(--km-text-sm)",
+    "var(--km-text-xs)",
+    "var(--km-text-xs)",
+    "var(--km-text-sm)",
+    "var(--km-text-xs)",
+  ]);
   assert.match(css, /\.kicker \{[^}]*font-size: var\(--km-text-sm\);/s);
   assert.match(css, /\.meta \{[^}]*font-size: var\(--km-text-xs\);/s);
   assert.match(css, /\.chip \{[^}]*font-size: var\(--km-text-xs\);/s);
-  assert.match(css, /\.step \{[^}]*font-size: 0\.875rem;/s);
-  assert.match(css, /\.note \{[^}]*font-size: 0\.75rem;/s);
+  assert.match(css, /\.step \{[^}]*font-size: var\(--km-text-sm\);/s);
+  assert.match(css, /\.note \{[^}]*font-size: var\(--km-text-xs\);/s);
+  assert.match(globalCss, /--km-text-sm:\s*0\.875rem/);
+  assert.match(globalCss, /--km-text-xs:\s*0\.75rem/);
 });
 
 test("crossfades reduced-motion step changes with opacity only", () => {
