@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "NEXT_FONT_GOOGLE_MOCKED_RESPONSES=./scripts/google-font-responses.cjs next build",
+    "build": "next build",
     "postbuild": "node scripts/check-static-output.mjs",
     "dev": "next dev",
     "start": "serve out",
