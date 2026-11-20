@@ -125,7 +125,9 @@ export function BenchmarkResults() {
         reranking, with no LLM calls.
       </p>
       <div className="mt-10">
-        <h3 className="km-text-lg leading-7 font-semibold">What Kimetsu adds</h3>
+        <h3 className="km-text-lg leading-7 font-semibold">
+          What Kimetsu adds
+        </h3>
         <div className="mt-4 grid gap-4 lg:grid-cols-3">
           {GAINS.map((gain) => (
             <article
