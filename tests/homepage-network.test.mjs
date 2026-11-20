@@ -114,6 +114,33 @@ test("documents the network result tables and links them from the index", () => 
   assert.match(results, /RTX 5060 Ti 16 GB/);
 });
 
+test("keeps the invite prefix dot inside a code token", () => {
+  const invite = section
+    .match(/A creates the invite\.[\s\S]*?Nothing is listening yet\./)?.[0]
+    .replace(/\s+/g, " ");
+  assert.equal(
+    invite,
+    "A creates the invite. The code starts with <code>knet1.</code> The default name is friends. Nothing is listening yet.",
+  );
+  assert.equal(
+    section.includes("On B, membership is saved. Nothing is listening."),
+    true,
+  );
+  assert.equal(
+    section.includes(
+      "A runs share while B runs kimetsu network request. If discovery misses A, pass the peer: line share printed.",
+    ),
+    true,
+  );
+  for (const command of [
+    'command: "kimetsu network invite --name laptop"',
+    'command: "kimetsu network join <code>"',
+    'command: "kimetsu network share"',
+  ]) {
+    assert.equal(section.includes(command), true, command);
+  }
+});
+
 test("does not repeat install commands in the network section", () => {
   for (const command of [
     "kimetsu plugin install grok-bot",

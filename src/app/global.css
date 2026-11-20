@@ -219,6 +219,13 @@ html {
   text-underline-offset: 4px;
 }
 
+/* 24px target for standalone text links. Kept off .km-text-link so prose links stay inline. */
+.km-text-link-target {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+}
+
 .km-text-link:hover {
   text-decoration: underline;
 }

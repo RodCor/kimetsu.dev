@@ -20,10 +20,10 @@ export function AboutContact() {
           . Written in Rust and released under the MIT and Apache-2.0 licenses.
         </p>
         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-          <a href={links.github} className="km-text-link">
+          <a href={links.github} className="km-text-link km-text-link-target">
             Source code →
           </a>
-          <Link href="/projects" className="km-text-link">
+          <Link href="/projects" className="km-text-link km-text-link-target">
             Related projects →
           </Link>
         </div>
@@ -42,7 +42,7 @@ export function AboutContact() {
             href={links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="km-text-link"
+            className="km-text-link km-text-link-target"
           >
             LinkedIn
             <span className="sr-only"> (opens in a new tab)</span>
