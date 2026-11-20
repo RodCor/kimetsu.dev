@@ -76,40 +76,6 @@ export function NetworkSection() {
           </li>
         ))}
       </ol>
-
-      <p className="mt-10">
-        <a href="#get-started" className="km-text-link">
-          Install commands in Get started
-        </a>
-      </p>
-
-      <div className="km-text-sm mt-8 max-w-3xl leading-6 text-fd-muted-foreground">
-        <p>
-          v2.11.0 prebuilt and npm binaries include{" "}
-          <code translate="no" className="km-text-xs font-mono leading-4">
-            kimetsu network
-          </code>
-          .{" "}
-          <code translate="no" className="km-text-xs font-mono leading-4">
-            cargo install kimetsu-cli
-          </code>{" "}
-          still needs{" "}
-          <code translate="no" className="km-text-xs font-mono leading-4">
-            --features network
-          </code>
-          . Relay is off, and router port mapping stays off unless you pass{" "}
-          <code translate="no" className="km-text-xs font-mono leading-4">
-            --map-ports
-          </code>
-          . This is not Kimetsu Remote, and Claude Desktop has no installer. The
-          Pi package can request a pack; it does not start share.
-        </p>
-        <p className="mt-3">
-          <Link href="/docs/network/security" className="km-text-link">
-            What is signed, scrubbed, and when Kimetsu listens →
-          </Link>
-        </p>
-      </div>
     </section>
   );
 }
