@@ -1,0 +1,294 @@
+{
+  "method": {
+    "build": "npm run build",
+    "serve": "npx serve <out copy>",
+    "beforeBase": "6346e88fc4e7de84e1553481b1755cdd161a6986",
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 900,
+        "deviceScaleFactor": 1
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "deviceScaleFactor": 1
+      }
+    ],
+    "pageHeight": "document.documentElement.scrollHeight",
+    "networkHeight": "#network offsetHeight",
+    "chrome": "Google Chrome 157.0.8103.50",
+    "lighthouse": "13.6.0",
+    "axe": "4.14.1"
+  },
+  "heights": {
+    "before": [
+      {
+        "width": 1440,
+        "networkOffsetHeight": 1236,
+        "pageScrollHeight": 3202,
+        "figureCountsInBenchmarks": {
+          "1.77x": 1,
+          "22% to 65%": 1,
+          "about 99%": 1
+        }
+      },
+      {
+        "width": 390,
+        "networkOffsetHeight": 2292,
+        "pageScrollHeight": 5578,
+        "figureCountsInBenchmarks": {
+          "1.77x": 1,
+          "22% to 65%": 1,
+          "about 99%": 1
+        }
+      }
+    ],
+    "after": [
+      {
+        "width": 1440,
+        "networkOffsetHeight": 1032,
+        "pageScrollHeight": 2998,
+        "figureCountsInBenchmarks": {
+          "1.77x": 1,
+          "22% to 65%": 1,
+          "about 99%": 1
+        }
+      },
+      {
+        "width": 390,
+        "networkOffsetHeight": 1968,
+        "pageScrollHeight": 5254,
+        "figureCountsInBenchmarks": {
+          "1.77x": 1,
+          "22% to 65%": 1,
+          "about 99%": 1
+        }
+      }
+    ]
+  },
+  "lighthouse": {
+    "before": {
+      "runs": [
+        {
+          "run": 1,
+          "score": 1,
+          "lcpMs": 909.9711,
+          "cls": 0,
+          "tbtMs": 72.00000000000045,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3748.5,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 2,
+          "score": 0.99,
+          "lcpMs": 908.1677,
+          "cls": 0,
+          "tbtMs": 98.5,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3766.5,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 3,
+          "score": 1,
+          "lcpMs": 907.7022,
+          "cls": 0,
+          "tbtMs": 86.49999999999955,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3585.5,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 4,
+          "score": 1,
+          "lcpMs": 908.3613,
+          "cls": 0,
+          "tbtMs": 76.49999999999909,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3706,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 5,
+          "score": 1,
+          "lcpMs": 907.3939,
+          "cls": 0,
+          "tbtMs": 80,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3745.5,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        }
+      ],
+      "median": {
+        "score": 1,
+        "lcpMs": 908.1677,
+        "cls": 0,
+        "tbtMs": 80,
+        "benchmarkIndex": 3745.5
+      }
+    },
+    "after": {
+      "runs": [
+        {
+          "run": 1,
+          "score": 1,
+          "lcpMs": 907.1736000000001,
+          "cls": 0,
+          "tbtMs": 70.49999999999977,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3797.5,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 2,
+          "score": 1,
+          "lcpMs": 906.4421,
+          "cls": 0,
+          "tbtMs": 72,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3830,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 3,
+          "score": 1,
+          "lcpMs": 907.4117000000001,
+          "cls": 0,
+          "tbtMs": 74.49999999999955,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3772,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 4,
+          "score": 1,
+          "lcpMs": 907.3983000000001,
+          "cls": 0,
+          "tbtMs": 87.49999999999955,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3803,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        },
+        {
+          "run": 5,
+          "score": 1,
+          "lcpMs": 906.3199999999999,
+          "cls": 0,
+          "tbtMs": 78.49999999999909,
+          "lighthouseVersion": "13.6.0",
+          "hostUserAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+          "benchmarkIndex": 3735,
+          "formFactor": "mobile",
+          "screenEmulation": {
+            "mobile": true,
+            "width": 412,
+            "height": 823,
+            "deviceScaleFactor": 1.75,
+            "disabled": false
+          },
+          "throttlingMethod": "simulate"
+        }
+      ],
+      "median": {
+        "score": 1,
+        "lcpMs": 907.1736000000001,
+        "cls": 0,
+        "tbtMs": 74.49999999999955,
+        "benchmarkIndex": 3797.5
+      }
+    }
+  },
+  "axe": {
+    "version": "4.14.1",
+    "violationCount": 0,
+    "headingOrder": "passes",
+    "incomplete": "color-contrast (background could not be determined; not a violation)",
+    "widths": [
+      1440,
+      390
+    ]
+  }
+}
