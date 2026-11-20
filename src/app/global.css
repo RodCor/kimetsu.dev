@@ -26,8 +26,12 @@
 }
 
 /* Shiki comment gray #6A737D is 3.65:1 on the dark code background #191919.
-   The token sets the variable inline, so the override has to win that declaration. */
-.dark .shiki span[style*="--shiki-dark:#6A737D"] {
+   The token sets the variable inline, so the override has to win that declaration.
+   Server HTML omits the space after the colon; the client render inserts one. */
+.dark .shiki span[style*="--shiki-dark:#6A737D"],
+.dark .shiki span[style*="--shiki-dark: #6A737D"],
+.dark .shiki span[style*="--shiki-dark:#6a737d"],
+.dark .shiki span[style*="--shiki-dark: #6a737d"] {
   --shiki-dark: #8b949e !important;
 }
 
