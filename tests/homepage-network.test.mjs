@@ -46,7 +46,7 @@ test("renders the three network figures inside benchmarks, not the network secti
   const block = benchmarks.slice(start, end);
   const h2 = block.indexOf("Benchmark results");
   const singleBrain = block.indexOf("BEAM 100K");
-  const networkLabel = block.search(/>\s*Kimetsu Network\s*</);
+  const networkLabel = block.search(/>\s*What Kimetsu adds\s*</);
   const gainsMap = block.indexOf("{GAINS.map");
   assert.ok(
     h2 >= 0 &&
@@ -55,7 +55,7 @@ test("renders the three network figures inside benchmarks, not the network secti
       gainsMap > networkLabel,
   );
   assert.match(block, /<h2[^>]*>\s*Benchmark results\s*<\/h2>/);
-  assert.match(block, /<h3[^>]*>\s*Kimetsu Network\s*<\/h3>/);
+  assert.match(block, /<h3[^>]*>\s*What Kimetsu adds\s*<\/h3>/);
   for (const figure of ["1.77x", "22% to 65%", "about 99%"]) {
     assert.equal(benchmarks.split(figure).length - 1, 1, figure);
     assert.equal(section.includes(figure), false, figure);
