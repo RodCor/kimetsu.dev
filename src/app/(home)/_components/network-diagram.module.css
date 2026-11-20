@@ -248,7 +248,7 @@
   background: var(--color-fd-background);
   color: var(--color-fd-foreground);
   font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.875rem;
+  font-size: var(--km-text-sm);
   cursor: pointer;
 }
 
@@ -275,7 +275,7 @@
   display: none;
   margin: 0.75rem 0 0;
   color: var(--color-fd-muted-foreground);
-  font-size: 0.75rem;
+  font-size: var(--km-text-xs);
   line-height: 1.25rem;
 }
 
